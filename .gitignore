@@ -5,3 +5,6 @@
 
 # Ignoramos checkpoints do jupyter notebook
 .ipynb_checkpoints/
+# Ignoramos html e zip (trabalhos final)
+*.zip
+*.html
