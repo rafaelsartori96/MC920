@@ -1,0 +1,7 @@
+# Ignoramos arquivos sem extensão
+*
+!*.*
+!*/
+
+# Ignoramos checkpoints do jupyter notebook
+.ipynb_checkpoints/
