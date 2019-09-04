@@ -10,3 +10,9 @@ Aulas/
 # Ignoramos html e zip (trabalhos final)
 *.zip
 *.html
+# Ignoramos arquivos auxiliares de LaTeX
+*.fls
+*.log
+*.synctex.gz
+*.fdb_latexmk
+*.aux
