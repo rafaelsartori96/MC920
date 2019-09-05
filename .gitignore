@@ -3,8 +3,6 @@
 !*.*
 !*/
 
-# Deixamos de ignorar Pipfile
-!Pipfile
 # Ignoramos checkpoints do jupyter notebook
 .ipynb_checkpoints/
 # Ignoramos a pasta de aulas
@@ -12,11 +10,3 @@ Aulas/
 # Ignoramos html e zip (trabalhos final)
 *.zip
 *.html
-# Ignoramos arquivos auxiliares de LaTeX
-*.fls
-*.log
-*.synctex.gz
-*.fdb_latexmk
-*.aux
-# Ignoramos pasta de saída
-out/
