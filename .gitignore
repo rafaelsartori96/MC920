@@ -3,6 +3,8 @@
 !*.*
 !*/
 
+# Deixamos de ignorar Pipfile
+!Pipfile
 # Ignoramos checkpoints do jupyter notebook
 .ipynb_checkpoints/
 # Ignoramos a pasta de aulas
@@ -16,3 +18,5 @@ Aulas/
 *.synctex.gz
 *.fdb_latexmk
 *.aux
+# Ignoramos pasta de saída
+out/
