@@ -10,3 +10,5 @@ Aulas/
 # Ignoramos html e zip (trabalhos final)
 *.zip
 *.html
+# Ignoramos virtual environment
+.venv/
