@@ -22,4 +22,4 @@ $ pipenv shell
 
 ## Organização do projeto
 
-Tentarei em todos os trabalhos utilizar como fonte as imagens disponibilizadas pelo professor, que estarão em `Imagens/` na raiz do projeto. A saída será armazenada dentro de cada trabalho individualmente como convir.
+Cada trabalho será um Notebook diferente no Jupyter, as imagens estarão dentro de cada trabalho, assim como a saída dos programas. Há algumas funções de utilidade que provavelmente utilizarei em mais de um trabalho, deixei no módulo Python `util` (na raiz do projeto).
