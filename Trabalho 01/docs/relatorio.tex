@@ -1,0 +1,88 @@
+% Rafael Sartori M. dos Santos, 186154
+\documentclass[brazilian,a4paper,twocolumn]{article}
+
+% Título
+\title{MC920 -- Trabalho 1}
+\author{Rafael Sartori M. Santos, 186154}
+\date{11 de setembro de 2019}
+
+% Configuração do documento
+\setlength{\parskip}{3pt}
+\usepackage[utf8]{inputenc} % tipo de documento UTF-8
+\usepackage{mathtools} % permitir expressões matemáticas
+\usepackage{babel} % configuração da lingua portuguesa
+\usepackage{caption} % para legenda de tabelas e figuras
+\usepackage[
+    pdfauthor={Rafael Sartori M. Santos},
+    pdftitle={Trabalho 1 -- MC920},
+    pdfproducer={LaTeX (texlive) com hyperref}
+]{hyperref} % para links externos (href)
+\usepackage{cleveref} % para referenciar tabelas e figuras melhor
+\usepackage{indentfirst} % indentação de todo primeiro parágrafo
+\usepackage{graphicx} % para adicionar imagens
+\usepackage{subcaption} % para imagens ficarem lado a lado
+% Usamos geometry pois dá mais espaço que fullpage
+%\usepackage{geometry} % alterar geometria do papel
+%\geometry{a4paper,left=1.7cm,right=1.7cm,top=1cm,bottom=2.0cm} % menor margem
+\usepackage{fullpage} % utilizamos uma versão com menos espaçamento nas bordas
+
+% Início do documento
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+
+    O objetivo do trabalho é analisar, no processo de \textit{half-toning}, os diferentes métodos de difusão de erro: Floyd-Steinberg, Sevenson-Arce, Burkes, Sierra, Stucki e Jarvis-Judice-Ninke. Aplicarei uma transformação em 2 níveis para cada camada de cor de uma imagem representada com 3 camadas: vermelho, verde e azul (R, G, B). Obteremos ao final $8$ possibilidades de cor para cada ponto da imagem. Analisarei uma imagem de grande dimensão no formato PNG quanto a sua semelhança à original em uma tela de computador em 2 casos: curta e longa distância de visualização.
+
+    Farei esse processamento utilizando Python com as bibliotecas \href{https://opencv.org/}{\emph{OpenCV}} e \href{https://numpy.org/}{\emph{NumPy}} em um \href{https://jupyter.org/}{\emph{Jupyter Notebook}}.
+
+
+\section{Método}
+
+    Capturei uma imagem de grande dimensão (3096x4128) colorida com meu celular sob condições de alta luminosidade, pois gostaria de avaliar o efeito produzido em imagens que são comuns ao dia a dia. Converti do formato original JPEG para PNG utilizando a ferramenta \href{https://www.gimp.org/}{\emph{GIMP}}. No tratamento, utilizo apenas a PNG para não possuir intererência da compressão com perdas do outro formato.
+
+    Para realizar o processamento digital, as bibliotecas de Python que utilizei foram:
+    \begin{itemize}
+        \item \emph{OpenCV} para abrir e salvar imagens;
+        \item \emph{NumPy} para aplicar transformações à imagem;
+        \item Alguns módulos da padrão para calcular tempo de execução e iterar de formas diferentes na imagem.
+    \end{itemize}
+    Organizei todo código responsável pelo processamento e medição de tempo em um \emph{Jupyter Notebook}; o que era responsável por abrir e salvar imagens e aplicar as conversões necessárias para utilizar nas bibliotecas em um módulo de utilidade (comum a outros trabalhos da disciplina).
+
+    \subsection{Meios-tons}
+
+        Escolhi manter apenas 2 níveis para cada camada da imagem. Como há 3 camadas de cores na imagem que testei, obtive $ 2^3 $ possibilidades de cores para cada ponto.
+
+        A aplicação de meios-tons na imagem $f$ para produzir a imagem $g$ é dada pela \cref{eq:meios-tons}.
+
+        \begin{equation}
+        \label{eq:meios-tons}
+            g(x, y) =
+            \begin{cases}
+                255     & \text{se $f(x, y) \geq 128$} \\
+                0       & \text{caso contrário}
+            \end{cases}
+        \end{equation}
+
+    \subsection{Aplicação da difusão de erro}
+
+        Represento cada método de difusão através de uma matriz, que chamarei simplesmente de filtro, cujo centro de aplicação deve ser mencionado para sabermos onde aplicá-lo de forma vetorial. A difusão de Floyd-Steinberg, por exemplo, é representada pelo par da matriz e centro de aplicação:
+        \begin{equation*}
+            \Bigg(
+            \begin{bmatrix}
+                0 & 0 & 7/16 \\
+                3/16 & 5/16 & 1/16
+            \end{bmatrix}
+            ,\; (0, 1)
+            \Bigg)
+        \end{equation*}
+
+    \subsection{Limitações}
+
+        Como, para disseminar erros, é necessário alterar a imagem de entrada na aplicação, não é possível vetorizar toda a aplicação do filtro como é possível realizar em alguns casos. Por conta isso, só consegui vetorizar a aplicação da difusão de erro em cada ponto da imagem e a correção de valores (para manter a imagem no intervalo $[0, 255]$). Isso resulta em um código que demora vários minutos para imagens grandes: para a imagem que utilizei, o tempo de execução foi entre $879,98$ e $918,84$ segundos (aproximadamente $15$ minutos).
+
+        Também não é possível executar testes automaticamente em imagens monocromáticas: é necessário possuir 3 camadas de cores na imagem. Apesar de ser fácil isolar no código o trecho de aplicação em uma única camada, não o fiz senão para testes enquanto desenvolvia.
+
+
+\end{document}
