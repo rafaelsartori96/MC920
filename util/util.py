@@ -11,7 +11,7 @@ import cv2 # OpenCV para lidar com imagens
 def abrir_imagem(caminho):
     # Carregamos imagem utilizando OpenCV
     r, g, b = cv2.split(cv2.imread(caminho, cv2.IMREAD_UNCHANGED))
-    return (np.array(r), np.array(g), np.array(b))
+    return (np.asfarray(r), np.asfarray(g), np.asfarray(b))
 
 
 ## Função para salvar a imagem
