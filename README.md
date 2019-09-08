@@ -1,4 +1,4 @@
-# MC920 -- Processamento digital de imagem
+# MC920 - Processamento digital de imagem
 
 Repositório que utilizarei para a disciplina ministrada por H. Pedrini no segundo semestre de 2019 na Unicamp.
 

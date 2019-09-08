@@ -7,8 +7,14 @@
 .ipynb_checkpoints/
 # Ignoramos a pasta de aulas
 Aulas/
-# Ignoramos html e zip (trabalhos final)
+# Ignoramos html e zip (trabalhos finais do Jupyter)
 *.zip
 *.html
 # Ignoramos virtual environment
 .venv/
+# Ignoramos arquivos auxiliares de LaTeX
+*.out
+*.log
+*.fls
+*.fdb_latexmk
+*.aux
