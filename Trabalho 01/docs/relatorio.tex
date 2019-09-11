@@ -50,11 +50,11 @@
     \end{itemize}
     Organizei todo código responsável pelo processamento e medição de tempo em um \emph{Jupyter Notebook}; o que era responsável por abrir e salvar imagens e aplicar as conversões necessárias para utilizar nas bibliotecas em um módulo de utilidade (comum a outros trabalhos da disciplina).
 
-    Escolhi manter apenas 2 níveis de intensidade para cada camada de cor da imagem. Como há 3 camadas na imagem testada, obtive $ 2^3 $ possibilidades de cores para cada ponto, mas o código não é limitado quanto ao número de camadas.
+    Escolhi manter apenas 2 níveis de intensidade para cada camada de cor da imagem. Como há 3 camadas na imagem testada, obtive $ 2^3 $ possibilidades de cores para cada ponto. Apesar disso, o código não é limitado quanto ao número de camadas.
 
     \subsection{Meios-tons}
 
-        Começo separando as camadas da imagem colorida de $N$ cores em $N$ matrizes (uma para cada cor). A aplicação de meios-tons na camada $f$ para produzir a camada $g$ é dada pela \cref{eq:meios-tons}.
+        Começo separando as camadas da imagem colorida de $N$ camadas de cores em $N$ matrizes de dimensões iguais (uma para cada cor). A aplicação de meios-tons na camada $f$ para produzir a camada $g$ é dada pela \cref{eq:meios-tons}.
 
         \begin{equation}
         \label{eq:meios-tons}
@@ -65,7 +65,7 @@
             \end{cases}
         \end{equation}
 
-        Podemos realizar essa operação de forma vetorial quando nenhuma difusão de erro é aplicada. Caso contrário, precisamos alterar a imagem ponto a ponto e, por conta disso, a vetorização é limitada ao cálculo da difusão.
+        Podemos realizar essa operação de forma vetorial apenas quando nenhuma difusão de erro é aplicada.
 
     \subsection{Aplicação da difusão de erro}
 
@@ -100,6 +100,81 @@
 
     \subsection{Binarização sem difusão de erro}
 
+        A simples binarização, mostrada na \cref{fig:binarizada-sem_difusao}, dada apenas pela \cref{eq:meios-tons}, é ineficiente sozinha: há grandes distorções em todas as cores e perda de detalhes causada pela consideração de apenas um ponto para o cálculo do ponto na imagem resultante.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Imagem original}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel-binarizada.png}
+                \caption{Imagem binarizada sem difusão de erro}
+            \end{subfigure}
+
+            \caption{Comparativo para binarização sem difusão}
+            \label{fig:binarizada-sem_difusao}
+        \end{figure}
+
+    \subsection{Difusão de erro de Floyd-Steinberg}
+
+        A difusão de Floyd-Steinberg, mostrada na \cref{fig:binarizada-floyd_steinberg}, apesar de ser uma melhora considerável quando comparado com a binarização simples, apresenta um destaque grande às linhas de 45 graus.
+
+        Essas linhas são a causa das distorções de cores acentuadas,
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Imagem original}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-floyd_steinberg.png}
+                \caption{Imagem com difusão de erro Floyd-Steinberg}
+            \end{subfigure}
+
+            \caption{Comparativo para binarização com difusão de erro de Floyd-Steinberg}
+            \label{fig:binarizada-floyd_steinberg}
+        \end{figure}
+
+    \subsection{Difusão de erro de Burkes}
+
+        A difusão de Burkes possui os mesmos problemas que as de Floyd-Steinberg, porém em menor intensidade, como podemos ver na \cref{fig:binarizada-floyd_steinberg-burkes}.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-floyd_steinberg.png}
+                \caption{Imagem com difusão de erro Floyd-Steinberg}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-burkes.png}
+                \caption{Imagem com difusão de erro Burkes}
+            \end{subfigure}
+
+            \caption{Comparativo entre difusão de erro de Floyd-Steinberg e Burkes}
+            \label{fig:binarizada-floyd_steinberg-burkes}
+        \end{figure}
+
+        Podemos comparar ainda a intensidade das linhas à 45 graus entre as duas na \cref{fig:binarizada-floyd_steinberg-burkes-linhas}: mais acentuada em Floyd-Steinberg.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                %\includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-floyd_steinberg-linhas45.png}
+                \caption{Imagem com difusão de erro Floyd-Steinberg}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                %\includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-burkes-linhas45.png}
+                \caption{Imagem com difusão de erro Burkes}
+            \end{subfigure}
+
+            \caption{Comparativo entre linhas à 45 graus em Floyd-Steinberg e Burkes}
+            \label{fig:binarizada-floyd_steinberg-burkes-linhas}
+        \end{figure}
+
+% Floyd-Steinberg, Sevenson-Arce, Burkes, Sierra, Stucki e Jarvis-Judice-Ninke
 
 
 \end{document}
