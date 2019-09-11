@@ -50,13 +50,11 @@
     \end{itemize}
     Organizei todo código responsável pelo processamento e medição de tempo em um \emph{Jupyter Notebook}; o que era responsável por abrir e salvar imagens e aplicar as conversões necessárias para utilizar nas bibliotecas em um módulo de utilidade (comum a outros trabalhos da disciplina).
 
+    Escolhi manter apenas 2 níveis de intensidade para cada camada de cor da imagem. Como há 3 camadas na imagem testada, obtive $ 2^3 $ possibilidades de cores para cada ponto, mas o código não é limitado quanto ao número de camadas.
+
     \subsection{Meios-tons}
 
-        Começo separando as camadas da imagem (colorida de 3 camadas) em 3 matrizes (uma por cor) e copiando-as: para cada camada, uma cópia servirá como entrada (será alterada enquanto navegamos) e a outra servirá para armazenar a saída.
-
-        Escolhi manter apenas 2 níveis para cada camada da imagem. Como há 3 camadas de cores na imagem que testei, obtive $ 2^3 $ possibilidades de cores para cada ponto.
-
-        A aplicação de meios-tons na imagem $f$ para produzir a imagem $g$ é dada pela \cref{eq:meios-tons}.
+        Começo separando as camadas da imagem colorida de $N$ cores em $N$ matrizes (uma para cada cor). A aplicação de meios-tons na camada $f$ para produzir a camada $g$ é dada pela \cref{eq:meios-tons}.
 
         \begin{equation}
         \label{eq:meios-tons}
@@ -67,9 +65,11 @@
             \end{cases}
         \end{equation}
 
+        Podemos realizar essa operação de forma vetorial quando nenhuma difusão de erro é aplicada. Caso contrário, precisamos alterar a imagem ponto a ponto e, por conta disso, a vetorização é limitada ao cálculo da difusão.
+
     \subsection{Aplicação da difusão de erro}
 
-        Represento cada método de difusão através de uma matriz, que chamarei simplesmente de filtro, cujo centro de aplicação deve ser mencionado para sabermos onde aplicá-lo de forma vetorial. A difusão de Floyd-Steinberg, por exemplo, é representada pelo par da matriz e centro de aplicação:
+        Represento cada método de difusão através de uma matriz, que chamarei simplesmente de filtro, cujo centro de aplicação deve ser mencionado para sabermos onde aplicá-lo de forma vetorial. A difusão de Floyd-Steinberg, por exemplo, é representada pelo par matriz e centro de aplicação:
         \begin{equation*}
             \Bigg(
             \begin{bmatrix}
@@ -80,12 +80,26 @@
             \Bigg)
         \end{equation*}
 
-        Ao começar a
+        Para fazermos a aplicação de forma ainda mais efiicente, que é necessário pelo tamanho da imagem, precisamos adicionar \textit{padding} na imagem de entrada. O tamanho da borda é o mínimo necessário (calculado a partir do tamanho do filtro) para que o filtro possa ser aplicado sem condicionais.
+
+        Para percorrer a imagem, criei um \textit{iterator} para a imagem que realiza o zigue-zague na imagem como recomendado para a atividade: em linhas ímpares, percorremos a imagem crescentemente; nas pares, decrescentemente. Ele retorna em cada ponto a tupla composta pela coordenada horizontal, vertical e ainda o filtro, que é espelhado em relação à vertical nas linhas pares.
+
+        O \textit{iterator} é implementado de forma a reduzir os condicionais necessários enquanto navega a imagem através de ponteiro para função que é chamada a cada iteração, atualizada a cada linha. Outro benefício de utilizar essa interface é facilitar a implementação de outros caminhos: basta substituir o \textit{iterador}.
 
     \subsection{Limitações}
 
-        Como, para disseminar erros, é necessário alterar a imagem de entrada na aplicação, não é possível vetorizar toda a aplicação do filtro como é possível realizar em alguns casos. Por conta isso, só consegui vetorizar a aplicação da difusão de erro em cada ponto da imagem e a correção de valores (para manter a imagem no intervalo $[0, 255]$). Isso resulta em um código que demora vários minutos para imagens grandes: para a imagem que utilizei, o tempo de execução foi entre $879,98$ e $918,84$ segundos (aproximadamente $15$ minutos).
+        Como, para disseminar erros, é necessário alterar a imagem de entrada na aplicação, não é possível vetorizar toda a aplicação do filtro na imagem. Por conta isso, só consegui vetorizar a aplicação da difusão de erro em cada ponto da imagem e a correção de valores (para manter a imagem no intervalo $[0, 255]$ quando é armazenada em \textit{$8$ bits}). Isso resulta em um código que demora vários minutos para imagens grandes: para que utilizei, por exemplo, o tempo de execução foi entre $879,98$ e $918,84$ segundos (aproximadamente $15$ minutos) para cada filtro.
 
-        Também não é possível executar testes automaticamente em imagens monocromáticas: é necessário possuir 3 camadas de cores na imagem. Apesar de ser fácil isolar no código o trecho de aplicação em uma única camada, não o fiz senão para testes enquanto desenvolvia.
+        Vale ressaltar que tentei executar em paralelo o processamento de cada camada utilizando a biblioteca padrão \texttt{multiprocessing}, mas houve problemas de compartilhamento de memória entre processos quando a imagem possui grandes dimensões. Alguma bibliotecas não-padrão de Python poderia solucionar isso.
+
+
+\section{Resultados obtidos e análise}
+
+    Há algumas considerações que valem para todas as imagens. Por exemplo, apesar da abordagem que utilizo para aplicação do filtro alterar a borda, perdendo valores que poderiam ser mantidas na imagem com outras soluções, não foi possível notar algum artefato específico às bordas nas respostas.
+
+
+    \subsection{Binarização sem difusão de erro}
+
+
 
 \end{document}
