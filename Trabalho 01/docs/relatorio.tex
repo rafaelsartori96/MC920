@@ -50,6 +50,8 @@
     \end{itemize}
     Organizei todo código responsável pelo processamento e medição de tempo em um \emph{Jupyter Notebook}; o que era responsável por abrir e salvar imagens e aplicar as conversões necessárias para utilizar nas bibliotecas em um módulo de utilidade (comum a outros trabalhos da disciplina).
 
+    Começo separando as camadas da imagem (colorida de 3 camadas) em 3 matrizes (uma por cor) e copiando-as: para cada camada, uma cópia servirá como entrada (será alterada enquanto navegamos) e a outra servirá para armazenar a saída.
+
     \subsection{Meios-tons}
 
         Escolhi manter apenas 2 níveis para cada camada da imagem. Como há 3 camadas de cores na imagem que testei, obtive $ 2^3 $ possibilidades de cores para cada ponto.
@@ -78,11 +80,12 @@
             \Bigg)
         \end{equation*}
 
+        Ao começar a
+
     \subsection{Limitações}
 
         Como, para disseminar erros, é necessário alterar a imagem de entrada na aplicação, não é possível vetorizar toda a aplicação do filtro como é possível realizar em alguns casos. Por conta isso, só consegui vetorizar a aplicação da difusão de erro em cada ponto da imagem e a correção de valores (para manter a imagem no intervalo $[0, 255]$). Isso resulta em um código que demora vários minutos para imagens grandes: para a imagem que utilizei, o tempo de execução foi entre $879,98$ e $918,84$ segundos (aproximadamente $15$ minutos).
 
         Também não é possível executar testes automaticamente em imagens monocromáticas: é necessário possuir 3 camadas de cores na imagem. Apesar de ser fácil isolar no código o trecho de aplicação em uma única camada, não o fiz senão para testes enquanto desenvolvia.
-
 
 \end{document}
