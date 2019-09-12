@@ -101,7 +101,7 @@
 
     \subsection{Binarização sem difusão de erro}
 
-        A simples binarização, mostrada na \cref{fig:binarizada-sem_difusao}, dada apenas pela \cref{eq:meios-tons}, é ineficiente sozinha: há grandes distorções em todas as cores e perda de detalhes causada pela consideração de apenas um ponto para o cálculo da imagem resultante. Visualmente nada fiel à original.
+        A simples binarização, mostrada na \cref{fig:binarizada-sem_difusao}, dada apenas pela \cref{eq:meios-tons}, é ineficiente sozinha: há grandes distorções em todas as cores e perda de detalhes causada pela consideração de apenas um ponto para o cálculo da imagem resultante. Visualmente infiel à original.
 
         \begin{figure}
             \centering
@@ -158,16 +158,16 @@
             \label{fig:binarizada-floyd_steinberg-burkes}
         \end{figure}
 
-        Podemos comparar ainda a intensidade das linhas à 45 graus entre as duas na \cref{fig:binarizada-floyd_steinberg-burkes-linhas}: é mais acentuada em Floyd-Steinberg.
+        Podemos comparar ainda a intensidade das linhas à 45 graus entre as duas na \cref{fig:binarizada-floyd_steinberg-burkes-linhas}: em Floyd-Steinberg é mais acentuada e forte, já em Burkes é fina e maior, porém imita a textura. Por conta disso, a de Burkes parece mais natural quando vista a longa distância.
 
         \begin{figure}
             \centering
             \begin{subfigure}{0.24\textwidth}
-                %\includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-floyd_steinberg-linhas45.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-floyd_steinberg-detalhe1.png}
                 \caption{Imagem com difusão de erro Floyd-Steinberg}
             \end{subfigure}
             \begin{subfigure}{0.24\textwidth}
-                %\includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-burkes-linhas45.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-burkes-detalhe1.png}
                 \caption{Imagem com difusão de erro Burkes}
             \end{subfigure}
 
@@ -196,7 +196,7 @@
 
         \begin{figure}
             \centering
-            \includegraphics[width=0.45\textwidth,keepaspectratio]{../imgs/mel_binarizada-stevenson_arce.png}
+            \includegraphics[width=0.45\textwidth,keepaspectratio]{../imgs/mel_binarizada-stevenson_arce-detalhe1.png}
             \caption{Destaque nas linhas horizontais de Stevenson-Arce}
             \label{fig:binarizada-stevenson_arce-destaque}
         \end{figure}
@@ -209,11 +209,11 @@
         \begin{figure}
             \centering
             \begin{subfigure}{0.24\textwidth}
-                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-jarvis_judice_ninke-detalhe1.png}
                 \caption{Linhas horizontais em cores escuras}
             \end{subfigure}
             \begin{subfigure}{0.24\textwidth}
-                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-jarvis_judice_ninke.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-jarvis_judice_ninke-detalhe2.png}
                 \caption{Linhas a 135 graus em cores claras}
             \end{subfigure}
 
@@ -228,11 +228,11 @@
         \begin{figure}
             \centering
             \begin{subfigure}{0.24\textwidth}
-                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra-detalhe1.png}
                 \caption{Linhas horizontais em cores escuras}
             \end{subfigure}
             \begin{subfigure}{0.24\textwidth}
-                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra.png}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra-detalhe2.png}
                 \caption{Linhas a 135 graus em cores claras}
             \end{subfigure}
 
@@ -242,7 +242,7 @@
 
     \subsection{Difusão de erro de Stucki}
 
-        Na imagem testada, foi o melhor método de difusão de erro: é notável apenas pequenas linhas a 135 graus nas cores claras quando visto de perto. A grande distância, é muito fiel e difícil identificar a imagem.
+        Na imagem testada, foi o melhor método de difusão de erro: é notável apenas pequenas linhas a 135 graus nas cores claras quando visto de perto. Quando visto de longe, é muito fiel e difícil identificar a imagem que foi processada.
 
         \begin{figure}
             \centering
@@ -255,8 +255,49 @@
                 \caption{Imagem com difusão de erro Stucki}
             \end{subfigure}
 
-            \caption{Destaque a curta distância da difusão de erro de Sierra}
+            \caption{Comparativo para binarização com difusão de erro de Stucki}
             \label{fig:binarizada-stucki}
         \end{figure}
+
+        Podemos ainda avaliar melhor as diferenças entre Sierra com Stucki nas \cref{fig:binarizada-sierra-stucki-claras,fig:binarizada-sierra-stucki-escuras}.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra-detalhe1.png}
+                \caption{Detalhe de linhas a 135 graus em Sierra}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-stucki-detalhe1.png}
+                \caption{Detalhe de linhas a 135 graus em Stucki}
+            \end{subfigure}
+
+            \caption{Comparativo entre linhas à 135 graus em Sierra e Stucki em cores mais claras}
+            \label{fig:binarizada-sierra-stucki-claras}
+        \end{figure}
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra-detalhe2.png}
+                \caption{Detalhe de linhas a 135 graus em Sierra}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-stucki-detalhe2.png}
+                \caption{Detalhe de linhas a 135 graus em Stucki}
+            \end{subfigure}
+
+            \caption{Comparativo entre linhas à 135 graus em Sierra e Stucki em cores mais escuras}
+            \label{fig:binarizada-sierra-stucki-escuras}
+        \end{figure}
+
+        Na \cref{fig:binarizada-sierra-stucki-claras} podemos notar que Stucki imita melhor a textura em cores claras do que Sierra. Na \cref{fig:binarizada-sierra-stucki-escuras}, ambas possuem os mesmos riscos visíveis, porém em Sierra são mais intensos por serem maiores e às vezes fazendo uma linha contínua.
+
+
+\section{Conclusão}
+
+    Concluímos que, para a imagem colorida de grande dimensão que temos, a difusão de erro de Stucki com binarização em cada camada de cor produz resultados muito fieis a imagem original.
+
+    Além disso, notamos como a propagação de erros pode, por um lado, auxiliar muito na fidelidade da imagem em relação à original, porém, pelo outro, adicionar artefatos muito perceptíveis, como aumentar saturação aparente, adicionar ruídos ou ainda linhas irreais e notáveis.
 
 \end{document}
