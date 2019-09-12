@@ -97,10 +97,11 @@
 
     Há algumas considerações que valem para todas as imagens. Por exemplo, apesar da abordagem que utilizo para aplicação do filtro alterar a borda, perdendo valores que poderiam ser mantidas na imagem com outras soluções, não foi possível notar algum artefato específico às bordas nas respostas.
 
+    Apresentarei os resultados começando pelos métodos que considero mais ineficientes para o tipo de imagem testada (grandes dimensões, colorida). Nas comparações, o objetivo é obter uma imagem com grande fidelidade à imagem original.
 
     \subsection{Binarização sem difusão de erro}
 
-        A simples binarização, mostrada na \cref{fig:binarizada-sem_difusao}, dada apenas pela \cref{eq:meios-tons}, é ineficiente sozinha: há grandes distorções em todas as cores e perda de detalhes causada pela consideração de apenas um ponto para o cálculo do ponto na imagem resultante.
+        A simples binarização, mostrada na \cref{fig:binarizada-sem_difusao}, dada apenas pela \cref{eq:meios-tons}, é ineficiente sozinha: há grandes distorções em todas as cores e perda de detalhes causada pela consideração de apenas um ponto para o cálculo da imagem resultante. Visualmente nada fiel à original.
 
         \begin{figure}
             \centering
@@ -121,7 +122,7 @@
 
         A difusão de Floyd-Steinberg, mostrada na \cref{fig:binarizada-floyd_steinberg}, apesar de ser uma melhora considerável quando comparado com a binarização simples, apresenta um destaque grande às linhas de 45 graus.
 
-        Essas linhas são a causa das distorções de cores acentuadas,
+        Essas linhas são a causa das distorções de cores acentuadas, pois a propagação das cores é muito intensa, passando o limite dos objetos, de forma a cobrir trechos em que a cor estaria mais suavizada, aumentando a sensação visual de supersaturação da imagem resultante.
 
         \begin{figure}
             \centering
@@ -140,7 +141,7 @@
 
     \subsection{Difusão de erro de Burkes}
 
-        A difusão de Burkes possui os mesmos problemas que as de Floyd-Steinberg, porém em menor intensidade, como podemos ver na \cref{fig:binarizada-floyd_steinberg-burkes}.
+        A difusão de Burkes possui os mesmos problemas que as de Floyd-Steinberg, porém em menor intensidade, como podemos ver na \cref{fig:binarizada-floyd_steinberg-burkes}. Isso ainda resulta em um notável aumento na saturação aparente da imagem.
 
         \begin{figure}
             \centering
@@ -157,7 +158,7 @@
             \label{fig:binarizada-floyd_steinberg-burkes}
         \end{figure}
 
-        Podemos comparar ainda a intensidade das linhas à 45 graus entre as duas na \cref{fig:binarizada-floyd_steinberg-burkes-linhas}: mais acentuada em Floyd-Steinberg.
+        Podemos comparar ainda a intensidade das linhas à 45 graus entre as duas na \cref{fig:binarizada-floyd_steinberg-burkes-linhas}: é mais acentuada em Floyd-Steinberg.
 
         \begin{figure}
             \centering
@@ -174,7 +175,88 @@
             \label{fig:binarizada-floyd_steinberg-burkes-linhas}
         \end{figure}
 
-% Floyd-Steinberg, Sevenson-Arce, Burkes, Sierra, Stucki e Jarvis-Judice-Ninke
+    \subsection{Difusão de erro de Stevenson-Arce}
 
+        A difusão de Stevenson-Arce mantém de forma muito eficiente a fidelidade às cores da imagem original, como visto na \cref{fig:binarizada-stevenson_arce}. Podemos notar entretanto a adição de um ruído intenso nos trechos muito claros ou escuros, causado pela presença marcante das linhas horizontais quando visualizamos de perto a imagem (\cref{fig:binarizada-stevenson_arce-destaque}).
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Imagem original}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-stevenson_arce.png}
+                \caption{Imagem com difusão de erro Stevenson-Arce}
+            \end{subfigure}
+
+            \caption{Comparativo entre imagem original e a difusão de erro de Stevenson-Arce}
+            \label{fig:binarizada-stevenson_arce}
+        \end{figure}
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=0.45\textwidth,keepaspectratio]{../imgs/mel_binarizada-stevenson_arce.png}
+            \caption{Destaque nas linhas horizontais de Stevenson-Arce}
+            \label{fig:binarizada-stevenson_arce-destaque}
+        \end{figure}
+
+
+    \subsection{Difusão de erro de Jarvis-Judice-Ninke}
+
+        Em Jarvis-Judice-Ninke, temos a presença acentuada de linhas horizontais em cores escuras e linhas a 135 graus nas claras, notável apenas a curtas distâncias (\cref{fig:binarizada-jarvis_judice_ninke-destaque}). Apesar disso, a grandes distâncias, é muito fiel à imagem original.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Linhas horizontais em cores escuras}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-jarvis_judice_ninke.png}
+                \caption{Linhas a 135 graus em cores claras}
+            \end{subfigure}
+
+            \caption{Destaque a curta distância da difusão de erro de Jarvis-Judice-Ninke}
+            \label{fig:binarizada-jarvis_judice_ninke-destaque}
+        \end{figure}
+
+    \subsection{Difusão de erro de Sierra}
+
+        Como em Jarvis-Judice-Ninke, a difusão de Sierra também possui linhas a 135 graus visíveis a curtas distâncias e é bastante fiel à imagem original. A intensidade das linhas horizontais em cores escuras, no entanto, é bem menos acentuada, como podemos notar na \cref{fig:binarizada-sierra-destaque}.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Linhas horizontais em cores escuras}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-sierra.png}
+                \caption{Linhas a 135 graus em cores claras}
+            \end{subfigure}
+
+            \caption{Destaque a curta distância da difusão de erro de Sierra}
+            \label{fig:binarizada-sierra-destaque}
+        \end{figure}
+
+    \subsection{Difusão de erro de Stucki}
+
+        Na imagem testada, foi o melhor método de difusão de erro: é notável apenas pequenas linhas a 135 graus nas cores claras quando visto de perto. A grande distância, é muito fiel e difícil identificar a imagem.
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel.png}
+                \caption{Imagem original}
+            \end{subfigure}
+            \begin{subfigure}{0.24\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{../imgs/mel_binarizada-stucki.png}
+                \caption{Imagem com difusão de erro Stucki}
+            \end{subfigure}
+
+            \caption{Destaque a curta distância da difusão de erro de Sierra}
+            \label{fig:binarizada-stucki}
+        \end{figure}
 
 \end{document}
