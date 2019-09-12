@@ -4,20 +4,24 @@ Repositório que utilizarei para a disciplina ministrada por H. Pedrini no segun
 
 ## Pré-requisitos
 
-É necessário possuir `pipenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/) e [numpy](https://www.numpy.org/).
+É necessário possuir `virtualenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/) e [numpy](https://www.numpy.org/).
 
 ## Instalação e execução do ambiente
 
-Utilizando o `pipenv`, na raiz do projeto, execute:
-```
-# Para instalar:
-$ pipenv install
+Utilizando `virtualenv` na raiz do projeto, execute:
 
-# Para executar:
-$ pipenv shell
+```
+# Para instalar o virtual environment:
+$ virtualenv .venv
+
+# Para entrar no environment:
+$ source .venv/bin/activate
+
+# Instalamos todas as dependências
+(.venv) $ pip install -r requirements.txt
 
 # E, no ambiente, abrimos o notebook:
-(MC920) $ jupyter notebook
+(.venv) $ jupyter notebook
 ```
 
 ## Organização do projeto
