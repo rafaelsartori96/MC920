@@ -27,3 +27,5 @@ $ source .venv/bin/activate
 ## Organização do projeto
 
 Cada trabalho será um Notebook diferente no Jupyter, as imagens estarão dentro de cada trabalho, assim como a saída dos programas. Há algumas funções de utilidade que provavelmente utilizarei em mais de um trabalho, deixei no módulo Python `util` (na raiz do projeto).
+
+Os slides e materiais em aulas (`Aulas/`) foram feitos pelo prof. Pedrini. Se houver qualquer problema em mantê-los aqui, as removerei assim que requisitado.

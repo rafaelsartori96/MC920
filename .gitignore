@@ -5,8 +5,6 @@
 
 # Ignoramos checkpoints do jupyter notebook
 .ipynb_checkpoints/
-# Ignoramos a pasta de aulas
-Aulas/
 # Ignoramos html e zip (trabalhos finais do Jupyter)
 *.zip
 *.html
