@@ -3,8 +3,9 @@
 !*.*
 !*/
 
-# Ignoramos checkpoints do jupyter notebook
+# Ignoramos checkpoints do jupyter notebook e cache de python
 .ipynb_checkpoints/
+__pycache__/
 # Ignoramos html e zip (trabalhos finais do Jupyter)
 *.zip
 *.html
