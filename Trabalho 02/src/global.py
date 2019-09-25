@@ -4,4 +4,14 @@
 
 import util
 
-print(util.abrir_imagem("../../Trabalho 01/imgs/mel.png"))
+def retorna(imagem, y, x):
+    return imagem[y][x]
+
+camadas = util.abrir_imagem("imgs/baboon.pgm")
+camadas_final = []
+
+for camada in camadas:
+    camadas_final.append(util.limiarizacao_local(camada, (31, 31), retorna))
+
+util.salvar_imagem("imgs/baboon-faznada.pgm", camadas_final)
+
