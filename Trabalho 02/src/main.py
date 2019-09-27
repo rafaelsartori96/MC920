@@ -110,8 +110,8 @@ if __name__ == '__main__':
         # Imprimimos num texto a proporção de preto para branco
         if imprimir_proporcao:
             with open(argumentos['proporcao_preto'], 'w') as arquivo:
-                arquivo.write('{0}/{1}={2}\n'.format(
-                    pretos, brancos, pretos / brancos
+                arquivo.write('b/w={0}/{1},b/*={2}\n'.format(
+                    pretos, brancos, pretos / (pretos + brancos)
                 ))
 
         # Imprimimos histograma se necessário
