@@ -41,15 +41,15 @@ def limiarizacao_local(imagem, shape_filtro, aplicar_threshold):
         ' laterais')
 
     # Calculamos o padding (= índice inicial)
-    pad_x = shape_filtro[0] // 2
-    pad_y = shape_filtro[1] // 2
+    pad_y = shape_filtro[0] // 2
+    pad_x = shape_filtro[1] // 2
     # Calculamos o índice final
-    max_x = imagem.shape[0] - pad_x
-    max_y = imagem.shape[1] - pad_y
+    max_y = imagem.shape[0] - pad_y
+    max_x = imagem.shape[1] - pad_x
 
     # Para toda linha e coluna da imagem
-    for y in range(pad_x, max_x):
-        for x in range(pad_y, max_y):
+    for y in range(pad_y, max_y):
+        for x in range(pad_x, max_x):
             # Aplicamos a função dada de threshold
             imagem_final[y][x] = aplicar_threshold(imagem, y, x)
 

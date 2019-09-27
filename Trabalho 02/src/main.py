@@ -4,8 +4,6 @@
 
 # Configuração das divisões do histograma
 DIVISOES_HISTOGRAMA = 128
-# Título padrão do histograma
-TITULO_PADRAO = 'Histograma da imagem'
 
 import argparse
 import matplotlib.pyplot as plt
@@ -14,19 +12,6 @@ import util
 
 from global_ import aplicar_global
 from bernsen import aplicar_bernsen
-
-
-def plot_histograma(histograma, divisoes, caminho, titulo=TITULO_PADRAO):
-    # Fazemos o plot
-    plt.hist(histograma, divisoes)
-    # Definimos os títulos
-    plt.title(titulo)
-    plt.ylabel('Número de pixels')
-    plt.xlabel('Intensidade de cinza')
-    # Salvamos o histograma no arquivo dado
-    plt.savefig(caminho)
-    # Limpamos o plot
-    plt.clf() # "clear figure"
 
 
 if __name__ == '__main__':
@@ -66,7 +51,7 @@ if __name__ == '__main__':
 
     # argumento para imprimirmos proporção de preto
     parser.add_argument(
-        '-p', '--proporcao-pretos',
+        '-p', '--proporcao-preto',
         help="Imprime em um arquivo texto a proporção de preto da imagem.",
         metavar='caminho'
     )
@@ -101,15 +86,20 @@ if __name__ == '__main__':
         histograma, divisoes = np.histogram(
             camada, bins=DIVISOES_HISTOGRAMA, range=(0, 255)
         )
-        # Imprimimos histograma
-        plot_histograma(
-            histograma, divisoes,
-            argumentos['histograma_original'],
-            'Histograma da imagem original'
-        )
+
+        # Fazemos o plot
+        plt.hist(histograma, divisoes)
+        # Definimos os títulos
+        plt.title('Histograma da imagem original')
+        plt.ylabel('Número de pixels')
+        plt.xlabel('Intensidade de cinza')
+        # Salvamos o histograma no arquivo dado
+        plt.savefig(argumentos['histograma_original'])
+        # Limpamos o plot
+        plt.clf() # "clear figure"
 
     # Conferimos se devemos imprimir a proporção de preto
-    imprimir_proporcao = argumentos['proporcao_pretos'] is not None
+    imprimir_proporcao = argumentos['proporcao_preto'] is not None
     imprimir_histograma = argumentos['histograma_final'] is not None
     if (imprimir_proporcao or imprimir_histograma):
         # Fazemos "histograma" da imagem final
@@ -119,7 +109,7 @@ if __name__ == '__main__':
 
         # Imprimimos num texto a proporção de preto para branco
         if imprimir_proporcao:
-            with open(argumentos['proporcao_pretos'], 'w') as arquivo:
+            with open(argumentos['proporcao_preto'], 'w') as arquivo:
                 arquivo.write('{0}/{1}={2}\n'.format(
                     pretos, brancos, pretos / brancos
                 ))
