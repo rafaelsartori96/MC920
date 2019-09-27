@@ -51,7 +51,7 @@ def limiarizacao_local(imagem, shape_filtro, aplicar_threshold):
     for y in range(pad_x, max_x):
         for x in range(pad_y, max_y):
             # Aplicamos a função dada de threshold
-            aplicar_threshold(imagem, y, x)
+            imagem_final[y][x] = aplicar_threshold(imagem, y, x)
 
     # Tiramos o padding da imagem final
     imagem_final = imagem_final[pad_y:max_y, pad_x:max_x]
