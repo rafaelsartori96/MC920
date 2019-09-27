@@ -27,7 +27,7 @@ def salvar_imagem(caminho, camadas):
 
 ## Função para aplicar threasholding (limiarização) local dada a função de
 ## aplicação de threshold:
-##      aplicar_threshold(imagem, y, x): retorna inteiro
+##      aplicar_threshold(imagem, y, x): retorna 0 ou 1
 ## Ignoraremos a borda da imagem através da tupla shape_filtro, que considera
 ## filtro quadrado.
 def limiarizacao_local(imagem, shape_filtro, aplicar_threshold):

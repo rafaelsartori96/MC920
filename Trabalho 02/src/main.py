@@ -47,8 +47,7 @@ if __name__ == '__main__':
         help="Função de limiarização a ser aplicada.",
         choices=opcoes_efeitos.keys(),
         default=next(iter(opcoes_efeitos.keys())),
-        required=False,
-        nargs=1
+        required=False
     )
 
     # argumento para imprimirmos o histograma
@@ -114,8 +113,8 @@ if __name__ == '__main__':
     imprimir_histograma = argumentos['histograma_final'] is not None
     if (imprimir_proporcao or imprimir_histograma):
         # Fazemos "histograma" da imagem final
-        brancos = camada_final[camada_final >= 128].size
-        pretos = camada_final[camada_final < 128].size
+        brancos = camada_final[camada_final == 1].size
+        pretos = camada_final[camada_final == 0].size
         total = brancos + pretos
 
         # Imprimimos num texto a proporção de preto para branco
@@ -147,5 +146,5 @@ if __name__ == '__main__':
             # Limpamos o plot
             plt.clf() # "clear figure"
 
-    # Salvamos a imagem na única camada
-    util.salvar_imagem(argumentos['img_out'], [camada_final])
+    # Salvamos a imagem na única camada não normalizada
+    util.salvar_imagem(argumentos['img_out'], [camada_final * 255])
