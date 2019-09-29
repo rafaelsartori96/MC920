@@ -22,7 +22,8 @@ for imagem in $IMAGENS; do
     # Flag histograma_in
     HISTOGRAMA_IN_FLAG="--histograma-original $HISTOGRAMA_IN"
 
-    for METODO in global bernsen; do
+    for METODO in global bernsen niblack; do
+    #for METODO in niblack; do
         # Para cada método, definimos o nome do arquivo
         IMAGEM_OUT=$CAMINHO_SAIDA$ARQUIVO-final-$METODO.pgm
         HISTOGRAMA_OUT=$CAMINHO_SAIDA$ARQUIVO-histograma_out-$METODO.png

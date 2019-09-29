@@ -9,5 +9,5 @@ import numpy as np
 
 
 # Aplicamos a limiarização global de forma vetorizada
-def aplicar_global(imagem):
+def aplicar_global(imagem, **kwargs):
     return np.where(imagem >= LIMIAR, 1, 0)

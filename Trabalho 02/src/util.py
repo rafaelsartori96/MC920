@@ -30,7 +30,7 @@ def salvar_imagem(caminho, camadas):
 ##      aplicar_threshold(imagem, y, x): retorna 0 ou 1
 ## Ignoraremos a borda da imagem através da tupla shape_filtro, que considera
 ## filtro quadrado.
-def limiarizacao_local(imagem, shape_filtro, aplicar_threshold):
+def limiarizacao_local(imagem, shape_filtro, aplicar_threshold, args):
     # Copiamos a camada
     imagem_final = imagem.copy()
 
@@ -51,7 +51,7 @@ def limiarizacao_local(imagem, shape_filtro, aplicar_threshold):
     for y in range(pad_y, max_y):
         for x in range(pad_x, max_x):
             # Aplicamos a função dada de threshold
-            imagem_final[y][x] = aplicar_threshold(imagem, y, x)
+            imagem_final[y][x] = aplicar_threshold(imagem, y, x, **args)
 
     # Tiramos o padding da imagem final
     imagem_final = imagem_final[pad_y:max_y, pad_x:max_x]

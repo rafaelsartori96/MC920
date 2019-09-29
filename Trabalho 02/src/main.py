@@ -12,6 +12,7 @@ import util
 
 from global_ import aplicar_global
 from bernsen import aplicar_bernsen
+from niblack import aplicar_niblack
 
 
 if __name__ == '__main__':
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     opcoes_efeitos = {
         'global': aplicar_global,
         'bernsen': aplicar_bernsen,
+        'niblack': aplicar_niblack,
     }
 
     # Criamos um parser de argumentos
@@ -56,6 +58,14 @@ if __name__ == '__main__':
         metavar='caminho'
     )
 
+    # Argumentos opcionais para configuração de filtros
+    for parametro in ['k', 'R', 'p', 'q']:
+        parser.add_argument(
+            '--{0}'.format(parametro),
+            help="Variável de configuração do filtro.",
+            type=float
+        )
+
     # e um argumento para a imagem de entrada e saída (obrigatórios)
     parser.add_argument(
         'img_in',
@@ -77,8 +87,17 @@ if __name__ == '__main__':
     # Isolamos a única camada
     camada = camadas[0]
 
+    # Determinamos a função a ser aplicada
+    efeito_limiar = argumentos['limiarizacao']
+    funcao_limiar = opcoes_efeitos[efeito_limiar]
+    # Determinamos argumentos válidos para a função
+    parametros = {}
+    for parametro in ['k', 'R', 'p', 'q']:
+        # Se foi definido, colocamos
+        if argumentos[parametro] is not None:
+            parametros[parametro] = argumentos[parametro]
     # Fazemos a limiarização de acordo com a função dada
-    camada_final = (opcoes_efeitos[argumentos['limiarizacao']])(camada)
+    camada_final = funcao_limiar(camada, parametros)
 
     # Conferimos se devemos imprimir histograma
     if argumentos['histograma_original'] is not None:
