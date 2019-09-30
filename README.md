@@ -20,8 +20,11 @@ $ source .venv/bin/activate
 # Instalamos todas as dependências
 (.venv) $ pip install -r requirements.txt
 
-# E, no ambiente, abrimos o notebook:
+# E, no ambiente, podemos o notebook:
 (.venv) $ jupyter notebook
+# ou ainda executar os scripts dos trabalhos:
+(.venv) $ cd Trabalho\ 02/
+(.venv) $ sh aplicar_limiarizacao.sh
 ```
 
 ## Organização do projeto
