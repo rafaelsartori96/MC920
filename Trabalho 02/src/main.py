@@ -58,7 +58,15 @@ if __name__ == '__main__':
         metavar='caminho'
     )
 
-    # Argumentos opcionais para configuração de filtros
+    # argumento para o tamanho do filtro
+    parser.add_argument(
+        '-d', '--dimensao',
+        help="Dimensão do filtro quadrado a ser aplicado. Por exemplo, 7"
+        " resulta em filtro 7x7.",
+        type=int
+    )
+
+    # argumentos opcionais para configuração de filtros
     for parametro in ['k', 'R', 'p', 'q']:
         parser.add_argument(
             '--{0}'.format(parametro),
@@ -92,12 +100,12 @@ if __name__ == '__main__':
     funcao_limiar = opcoes_efeitos[efeito_limiar]
     # Determinamos argumentos válidos para a função
     parametros = {}
-    for parametro in ['k', 'R', 'p', 'q']:
+    for parametro in ['dimensao', 'k', 'R', 'p', 'q']:
         # Se foi definido, colocamos
         if argumentos[parametro] is not None:
             parametros[parametro] = argumentos[parametro]
     # Fazemos a limiarização de acordo com a função dada
-    camada_final = funcao_limiar(camada, parametros)
+    camada_final = funcao_limiar(camada, **parametros)
 
     # Conferimos se devemos imprimir histograma
     if argumentos['histograma_original'] is not None:
