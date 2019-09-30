@@ -21,3 +21,5 @@ Para execução automática (em todas as imagens da pasta `imgs/`), execute:
 ```
 $ sh aplicar_limiarizacao.sh
 ```
+
+Para execução automática em paralelo, é necessário definir qualquer valor à _environment variable_ `MC920_PARALELO` e executar o script da mesma forma.

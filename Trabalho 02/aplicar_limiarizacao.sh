@@ -8,6 +8,13 @@ MAIN_PY=src/main.py
 # Pegamos as imagens
 IMAGENS=$CAMINHO_ENTRADA*.pgm
 
+# Conferindo se executaremos em paralelo
+if [[ -z "${MC920_PARALELO}" ]]; then
+    echo "Execução não paralela. Para paralelizar, defina a environment variable MC920_PARALELO com qualquer valor."
+else
+    echo "Execução paralela."
+fi
+
 for imagem in $IMAGENS; do
     # Removemos extensão
     ARQUIVO=${imagem%\.*}
@@ -37,6 +44,11 @@ for imagem in $IMAGENS; do
             $IMAGEM_IN \
             $IMAGEM_OUT \
             $HISTOGRAMA_IN_FLAG &
+        if [[ -z "${MC920_PARALELO}" ]]; then
+            wait
+        else
+            sleep 2
+        fi
 
         # Apagamos a flag do histograma
         HISTOGRAMA_IN_FLAG=""
