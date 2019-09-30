@@ -165,7 +165,7 @@ if __name__ == '__main__':
                 width=1
             )
             # Definimos os títulos
-            plt.title('Histograma da imagem final')
+            plt.title('Histograma da imagem com {0}'.format(efeito_limiar))
             plt.ylabel('Número de pixels em porcentagem')
             plt.xlabel('Intensidade de cinza')
             # Alteramos o range vertical do plot
