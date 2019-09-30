@@ -36,9 +36,13 @@ for imagem in $IMAGENS; do
             --proporcao-preto $PROPORCOES_OUT \
             $IMAGEM_IN \
             $IMAGEM_OUT \
-            $HISTOGRAMA_IN_FLAG
+            $HISTOGRAMA_IN_FLAG &
 
         # Apagamos a flag do histograma
         HISTOGRAMA_IN_FLAG=""
     done
 done
+
+echo "Aguardando programas..."
+wait
+echo "Pronto!"
