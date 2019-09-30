@@ -10,9 +10,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import util
 
-from global_ import aplicar_global
+from global_ import aplicar_global # k
 from bernsen import aplicar_bernsen
-from niblack import aplicar_niblack
+from contraste import aplicar_filtro_contraste
+from niblack import aplicar_niblack # k
+from sauvola_pietikainen import aplicar_sauvola_pietikainen # k, R
+from pms import aplicar_pms # k, R, p, q
+from media_local import aplicar_media as aplicar_media_local
+from media_global import aplicar_media as aplicar_media_global
+from mediana_local import aplicar_mediana as aplicar_mediana_local
+from mediana_global import aplicar_mediana as aplicar_mediana_global
 
 
 if __name__ == '__main__':
@@ -22,7 +29,15 @@ if __name__ == '__main__':
     opcoes_efeitos = {
         'global': aplicar_global,
         'bernsen': aplicar_bernsen,
+        'contraste': aplicar_filtro_contraste,
         'niblack': aplicar_niblack,
+        'sauvola-pietikainen': aplicar_sauvola_pietikainen,
+        'pms': aplicar_pms, # alias
+        'phansalskar-more-sabale': aplicar_pms,
+        'media-local': aplicar_media_local,
+        'media-global': aplicar_media_global,
+        'mediana-local': aplicar_mediana_local,
+        'mediana-global': aplicar_mediana_global,
     }
 
     # Criamos um parser de argumentos

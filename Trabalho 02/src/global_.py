@@ -2,12 +2,9 @@
 ##
 ## Método global de limiarização
 
-# Constante de limiar global
-LIMIAR = 128
-
 import numpy as np
 
 
 # Aplicamos a limiarização global de forma vetorizada
-def aplicar_global(imagem, **kwargs):
-    return np.where(imagem >= LIMIAR, 1, 0)
+def aplicar_global(imagem, k=128, **kwargs):
+    return np.where(imagem >= k, 1, 0)
