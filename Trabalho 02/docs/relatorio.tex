@@ -21,6 +21,7 @@
 \usepackage{cleveref} % para referenciar tabelas e figuras melhor
 \usepackage{indentfirst} % indentação de todo primeiro parágrafo
 \usepackage{graphicx} % para adicionar imagens
+\graphicspath{{../imgs_png/}} % atalho para o caminho das imagens
 \usepackage{subcaption} % para imagens ficarem lado a lado
 % Usamos geometry pois dá mais espaço que fullpage
 %\usepackage{geometry} % alterar geometria do papel
@@ -103,20 +104,20 @@
         \end{equation}
 
     \subsection{Sauvola e Pietikäinen}
-    \label{sec:sauvola-pietikainen}
+    \label{sec:sp}
 
-        A limiarização local de Sauvola-Pietikäinen utiliza a média $Z_{avg}$ e o desvio padrão $Z_{std}$, como em \ref{sec:niblack}, através da \cref{eq:sauvola-pietikainen}, com a intenção de produzir melhores resultados sob má iluminação.
+        A limiarização local de Sauvola-Pietikäinen utiliza a média $Z_{avg}$ e o desvio padrão $Z_{std}$, como em \ref{sec:niblack}, através da \cref{eq:sp}, com a intenção de produzir melhores resultados sob má iluminação.
 
         \begin{equation}
-        \label{eq:sauvola-pietikainen}
+        \label{eq:sp}
             T(x, y) = Z_{avg} \cdot \left[ 1 +  k \cdot \left( \frac{Z_{std}}{R} - 1\right) \right]
         \end{equation}
 
-        Possui dois parâmetros: $k$ e $R$, padronizados respectivamente em $0.5$ e $128$.
+        Possui dois parâmetros: $k$ e $R$, padronizados respectivamente em $0.5$ e $128$. É abreviado no código por \texttt{SP}.
 
     \subsection{Phansalskar, More e Sabale}
 
-        É uma variação de \ref{sec:sauvola-pietikainen}, porém pretende-se lidar melhor com imagens de baixo contraste. Então utiliza também a média e desvio padrão, como vemos na \cref{eq:pms}.
+        É uma variação de \ref{sec:sp}, porém pretende-se lidar melhor com imagens de baixo contraste. Então utiliza também a média e desvio padrão, como vemos na \cref{eq:pms}.
 
         \begin{multline}
         \label{eq:pms}
@@ -151,6 +152,63 @@
 
     A abordagem que tomei, então, foi por agrupamento de imagens de entrada (ao invés de agrupar por método), sintetizando ao final um resumo do que os métodos foram capazes. Nesse rumo, poderemos ter uma visão geral das condições e implicar as características do método.
 
+    \subsection{\texttt{Baboon}}
+
+        Podemos notar na \cref{fig:baboon} que há diversos detalhes finos (como os fios da pelagem, as linhas do nariz e olho). A imagem é em maioria muito nítida.
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=0.35\textwidth,keepaspectratio]{baboon}
+            \caption{Imagem original \texttt{baboon}}
+            \label{fig:baboon}
+        \end{figure}
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-global}
+                \caption{Método global}
+                \label{fig:baboon-global}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-bernsen}
+                \caption{Método Bernsen}
+                \label{fig:baboon-bernsen}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-niblack}
+                \caption{Método Niblack}
+                \label{fig:baboon-niblack}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-sp}
+                \caption{Método Sauvola-Pietikäinen}
+                \label{fig:baboon-sp}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-pms}
+                \caption{Método PMS}
+                \label{fig:baboon-pms}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-contraste}
+                \caption{Método do contraste}
+                \label{fig:baboon-contraste}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-media-local}
+                \caption{Método da média local}
+                \label{fig:baboon-media}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-mediana-local}
+                \caption{Método da mediana local}
+                \label{fig:baboon-mediana}
+            \end{subfigure}
+
+            \caption{Comparativo entre diversos métodos de limiarização}
+            \label{fig:baboon-limiarizacao}
+        \end{figure}
 
 \section{Conclusão}
 
