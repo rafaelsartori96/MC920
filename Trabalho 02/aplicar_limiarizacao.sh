@@ -2,7 +2,7 @@
 
 # Configurações
 CAMINHO_ENTRADA=imgs/
-CAMINHO_SAIDA=imgs_out/
+CAMINHO_SAIDA=imgs/
 MAIN_PY=src/main.py
 
 # Pegamos as imagens
@@ -29,8 +29,7 @@ for imagem in $IMAGENS; do
     # Flag histograma_in
     HISTOGRAMA_IN_FLAG="--histograma-original $HISTOGRAMA_IN"
 
-    for METODO in global bernsen niblack sauvola-pietikainen pms contraste media-local mediana-local; do
-    #for METODO in niblack; do
+    for METODO in global bernsen niblack sauvola-pietikainen pms contraste media-local mediana-local media-global mediana-global; do
         # Para cada método, definimos o nome do arquivo
         IMAGEM_OUT=$CAMINHO_SAIDA$ARQUIVO-final-$METODO.pgm
         HISTOGRAMA_OUT=$CAMINHO_SAIDA$ARQUIVO-histograma_out-$METODO.png
