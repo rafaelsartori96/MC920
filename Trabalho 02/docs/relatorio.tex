@@ -1,0 +1,157 @@
+% Rafael Sartori M. dos Santos, 186154
+\documentclass[brazilian,a4paper,twocolumn]{article}
+
+% Título
+\title{MC920 -- Trabalho 2}
+\author{Rafael Sartori M. Santos, 186154}
+\date{1 de outubro de 2019}
+
+% Configuração do documento
+\setlength{\parskip}{3pt}
+\usepackage[utf8]{inputenc} % tipo de documento UTF-8
+\usepackage{mathtools} % permitir expressões matemáticas
+\usepackage{breqn} % equações quebradas em várias linhas automaticamente
+\usepackage{babel} % configuração da lingua portuguesa
+\usepackage{caption} % para legenda de tabelas e figuras
+\usepackage[
+    pdfauthor={Rafael Sartori M. Santos},
+    pdftitle={Trabalho 2 -- MC920},
+    pdfproducer={LaTeX (texlive) com hyperref}
+]{hyperref} % para links externos (href)
+\usepackage{cleveref} % para referenciar tabelas e figuras melhor
+\usepackage{indentfirst} % indentação de todo primeiro parágrafo
+\usepackage{graphicx} % para adicionar imagens
+\usepackage{subcaption} % para imagens ficarem lado a lado
+% Usamos geometry pois dá mais espaço que fullpage
+%\usepackage{geometry} % alterar geometria do papel
+%\geometry{a4paper,left=1.7cm,right=1.7cm,top=1cm,bottom=2.0cm} % menor margem
+\usepackage{fullpage} % utilizamos uma versão com menos espaçamento nas bordas
+
+% Início do documento
+\begin{document}
+
+\maketitle
+
+
+\section{Introdução}
+
+    Neste trabalho, temos que avaliar e comparar diferentes métodos de limiarização (locais e globais). Aplicarei cada transformação em imagens monocromáticas em formato PGM fornecidas pelo professor H. Pedrini como sugere o enunciado. O resultado analisarei quanto aos contornos dos objetos, detalhes mantidos da imagem e ruído.
+
+    Executarei esse processamento utilizando Python com as bibliotecas padrão, \href{https://opencv.org/}{\emph{OpenCV}}, \href{https://matplotlib.org/}{\emph{Matplotlib}} e \href{https://numpy.org/}{\emph{NumPy}}.
+
+
+\section{Método}
+
+    As imagens fornecidas pelo professor foram armazenadas na pasta de entrada \texttt{imgs/} sem que fosse necessária qualquer conversão.
+
+    Para realizar o processamento digital, as bibliotecas de Python que utilizei foram:
+    \begin{itemize}
+        \item \emph{OpenCV} para abrir e salvar imagens;
+        \item \emph{NumPy} para aplicar transformações à imagem;
+        \item \emph{Matplotlib} para produzir histogramas;
+        \item Alguns módulos da padrão para interpretação da entrada (configuração de parâmetros para filtros, determinar imagem de saída, produzir informações como histogramas e relação entre pretos e brancos).
+    \end{itemize}
+
+    O código que interpreta as entradas e chama a função que corresponde ao filtro está em \texttt{main.py}. Algumas funções genéricas (aplicação de filtro, abrir e salvar imagens) estão em \texttt{util.py}. Os outros arquivos correspondem cada um a um filtro diferente de limiarização.
+
+    Como cada filtro possui diferente número de parâmetros, utilizei o recurso de argumentos variáveis de Python (o dicionário \texttt{**kwargs}) para que consiga de forma fácil, genérica e sem depender da ordem produzir os parâmetros dos filtros com valores padrões quando não mencionados.
+
+
+\section{Métodos de limiarização}
+
+    A limiarização ocorre através da comparação do ponto em que estamos considerando, $(x, y)$, com um limiar $T(x, y)$. De tal forma a produzir a imagem $g$ binária a partir de $f$ seguindo a \cref{eq:limiarizacao}.
+
+    \begin{equation}
+    \label{eq:limiarizacao}
+        g(x, y) =
+        \begin{cases}
+            1       & \text{se $f(x, y) \geq T(x, y)$} \\
+            0       & \text{caso contrário}
+        \end{cases}
+    \end{equation}
+
+    Quando a limiarização é local, podemos especificar o tamanho da vizinhança quadrada $Z_{n,n}$ alterando o valor de $n$ (\texttt{--dimensao} no programa), que deve ser ímpar para que o filtro seja aplicável de forma igual numa imagem discreta.
+
+    \subsection{Global}
+
+        A limiarização global é feita através de um limiar a ser aplicado em toda imagem, representado pela \cref{eq:global}.
+
+        \begin{equation}
+        \label{eq:global}
+            T(x, y) = k
+        \end{equation}
+
+        O parâmetro $k$ é usado no programa para determinar o limiar global, padrozinado em $128$.
+
+    \subsection{Bernsen}
+
+        A limiarização local de Bernsen utiliza o máximo e mínimo dos pontos de $Z$ de acordo com a \cref{eq:bernsen}. Não possui parâmetros.
+
+        \begin{equation}
+        \label{eq:bernsen}
+            T(x, y) = (Z_{min} + Z_{max}) / 2
+        \end{equation}
+
+    \subsection{Niblack}
+    \label{sec:niblack}
+
+        A limiarização local de Niblack utiliza a média $Z_{avg}$ e o desvio padrão $Z_{std}$ dos pontos de $Z$ de acordo com a \cref{eq:niblack}. Possui um parâmetro $k$ para o peso dado ao desvio padrão, padronizado em $0.8$ como no enunciado.
+
+        \begin{equation}
+        \label{eq:niblack}
+            T(x, y) = Z_{avg} + k \cdot Z_{std}
+        \end{equation}
+
+    \subsection{Sauvola e Pietikäinen}
+    \label{sec:sauvola-pietikainen}
+
+        A limiarização local de Sauvola-Pietikäinen utiliza a média $Z_{avg}$ e o desvio padrão $Z_{std}$, como em \ref{sec:niblack}, através da \cref{eq:sauvola-pietikainen}, com a intenção de produzir melhores resultados sob má iluminação.
+
+        \begin{equation}
+        \label{eq:sauvola-pietikainen}
+            T(x, y) = Z_{avg} \cdot \left[ 1 +  k \cdot \left( \frac{Z_{std}}{R} - 1\right) \right]
+        \end{equation}
+
+        Possui dois parâmetros: $k$ e $R$, padronizados respectivamente em $0.5$ e $128$.
+
+    \subsection{Phansalskar, More e Sabale}
+
+        É uma variação de \ref{sec:sauvola-pietikainen}, porém pretende-se lidar melhor com imagens de baixo contraste. Então utiliza também a média e desvio padrão, como vemos na \cref{eq:pms}.
+
+        \begin{multline}
+        \label{eq:pms}
+            T(x, y) = Z_{avg} \cdot \Biggl[ 1 +  p \cdot \exp{ \left( -q \cdot Z_{avg} \right) } \Biggr. \\ \Biggl. + k \cdot \left( \frac{Z_{std}}{R} - 1 \right) \Biggr]
+        \end{multline}
+
+        No código, é abreviado por \texttt{PMS} e utiliza todos os possíveis 4 parâmetros: $k$, $R$, $p$ e $q$, padronizados respectivamente por $0.25$, $0.5$, $2$ e $10$.
+
+    \subsection{Contraste}
+
+        O método local do constrate utiliza a distância relativa ao ponto mais escuro e mais claro da vizinhança: se está mais próximo de um ponto claro, é claro; se está de um ponto escuro, é escuro.
+
+        \begin{equation}
+        \label{eq:contraste}
+            F =
+            \begin{cases}
+                0       & \text{se $\mathopen|I - Z_{max}\mathclose| \geq \mathopen|I - Z_{min}\mathclose|$} \\
+                1       & \text{caso contrário}
+            \end{cases}
+        \end{equation}
+
+        O ponto final $F = g(x, y)$ da imagem pode ser expresso pela \cref{eq:contraste} onde $I$ é o ponto inicial da imagem $f(x, y)$. Não requer qualquer parâmetro.
+
+    \subsection{Média e mediana}
+
+        Consideramos a média ou a mediana dos pontos da vizinhança. Sendo esse valor o limiar $T(x, y)$, basta comparamos com o ponto em que estamos $f(x, y)$ como em \cref{eq:limiarizacao}. Também não requer qualquer parâmetro.
+
+
+\section{Resultados obtidos e análise}
+
+    a
+
+
+\section{Conclusão}
+
+    a
+
+\end{document}
