@@ -7,6 +7,8 @@ Programa para aplicação de efeitos de limiarização em imagens monocromática
 
 O programa Python fica na pasta `src/`, a função principal está em `main.py`, há funções auxiliares à todos os métodos em `util.py` e cada método de limiarização fica em um arquivo de mesmo nome, por exemplo, o método de Bernsen, `bernsen.py`.
 
+O relatório é feito em LaTeX (texlive) na pasta `docs/`. Para compilar corretamente, será necessário converter as imagens para PNG utilizando o _script_ `converter_pgm.sh`.
+
 
 ### Execução
 
@@ -19,7 +21,19 @@ Podemos especificar o método de limiarização, devemos especificar a imagem de
 
 Para execução automática (em todas as imagens da pasta `imgs/`), execute:
 ```
-$ sh aplicar_limiarizacao.sh
+$ bash aplicar_limiarizacao.sh
 ```
 
-Para execução automática em paralelo, é necessário definir qualquer valor à _environment variable_ `MC920_PARALELO` e executar o script da mesma forma.
+Para execução automática em paralelo, é necessário definir qualquer valor à _environment variable_ `MC920_PARALELO` e executar o _script_ da mesma forma.
+
+
+### Relatório
+
+Requer a [distribuição LaTeX texlive](https://tug.org/texlive/) e [`latexmk`](https://mg.readthedocs.io/latexmk.html).
+
+Com todas as imagens prontas em `imgs/`, para compilar o relatório, é necessário utilizar o _script_ e executar:
+```
+$ bash converter_pgm.sh
+$ cd docs/
+$ latexmk
+```

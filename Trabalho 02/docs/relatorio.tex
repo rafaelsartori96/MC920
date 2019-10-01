@@ -21,7 +21,7 @@
 \usepackage{cleveref} % para referenciar tabelas e figuras melhor
 \usepackage{indentfirst} % indentação de todo primeiro parágrafo
 \usepackage{graphicx} % para adicionar imagens
-\graphicspath{{../imgs_png/}} % atalho para o caminho das imagens
+\graphicspath{{../imgs_png/}, {../imgs/}} % atalho para o caminho das imagens
 \usepackage{subcaption} % para imagens ficarem lado a lado
 % Usamos geometry pois dá mais espaço que fullpage
 %\usepackage{geometry} % alterar geometria do papel
@@ -57,6 +57,8 @@
 
     Como cada filtro possui diferente número de parâmetros, utilizei o recurso de argumentos variáveis de Python (o dicionário \texttt{**kwargs}) para que consiga de forma fácil, genérica e sem depender da ordem produzir os parâmetros dos filtros com valores padrões quando não mencionados.
 
+    Os valores que analisarei serão os padrões fornecidos no enunciado. Em alguns métodos, no entanto, irei destacar valores alternativos para possivelmente corrigir imagens poluídas.
+
 
 \section{Métodos de limiarização}
 
@@ -71,7 +73,7 @@
         \end{cases}
     \end{equation}
 
-    Quando a limiarização é local, podemos especificar o tamanho da vizinhança quadrada $Z_{n,n}$ alterando o valor de $n$ (\texttt{--dimensao} no programa), que deve ser ímpar para que o filtro seja aplicável de forma igual numa imagem discreta.
+    Quando a limiarização é local, podemos especificar o tamanho da vizinhança quadrada $Z_{n,n}$ alterando o valor de $n$ (\texttt{--dimensao} no programa), que deve ser ímpar para que o filtro seja aplicável de forma igual numa imagem discreta. Em todos os casos, o valor padrão de $n$ foi $7$.
 
     \subsection{Global}
 
@@ -141,9 +143,14 @@
 
         O ponto final $F = g(x, y)$ da imagem pode ser expresso pela \cref{eq:contraste} onde $I$ é o ponto inicial da imagem $f(x, y)$. Não requer qualquer parâmetro.
 
-    \subsection{Média e mediana}
+    \subsection{Média e mediana locais}
+    \label{sec:media-mediana-locais}
 
-        Consideramos a média ou a mediana dos pontos da vizinhança. Sendo esse valor o limiar $T(x, y)$, basta comparamos com o ponto em que estamos $f(x, y)$ como em \cref{eq:limiarizacao}. Também não requer qualquer parâmetro.
+        Consideramos a média ou a mediana dos pontos da vizinhança. Sendo esse valor o limiar $T(x, y)$, basta comparamos com o ponto em que estamos $f(x, y)$ como em \cref{eq:limiarizacao}. Também não requerem qualquer parâmetro.
+
+    \subsection{Média e mediana globais}
+
+        Consideramos a média ou a mediana de todos os pontos como limiar, como em \ref{sec:media-mediana-locais} considerando a vizinhança como a imagem completa.
 
 
 \section{Resultados obtidos e análise}
@@ -154,14 +161,23 @@
 
     \subsection{\texttt{Baboon}}
 
-        Podemos notar na \cref{fig:baboon} que há diversos detalhes finos (como os fios da pelagem, as linhas do nariz e olho). A imagem é em maioria muito nítida.
-
         \begin{figure}
             \centering
-            \includegraphics[width=0.35\textwidth,keepaspectratio]{baboon}
-            \caption{Imagem original \texttt{baboon}}
-            \label{fig:baboon}
+            \begin{subfigure}{0.30\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon}
+                \caption{Imagem original \texttt{baboon}}
+                \label{fig:baboon}
+            \end{subfigure}
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-histograma_in}
+                \caption{Histograma da imagem original}
+                \label{fig:baboon-histograma}
+            \end{subfigure}
+
+            \caption{Características da imagem original}
         \end{figure}
+
+        Podemos notar na \cref{fig:baboon} que há diversos detalhes finos (como os fios da pelagem, as linhas do nariz e olho). A imagem é em maioria muito nítida e possui bom contraste (\cref{fig:baboon-histograma}).
 
         \begin{figure}
             \centering
@@ -182,7 +198,7 @@
             \end{subfigure}
             \begin{subfigure}{0.23\textwidth}
                 \includegraphics[width=\textwidth,keepaspectratio]{baboon-final-sp}
-                \caption{Método Sauvola-Pietikäinen}
+                \caption{Método de Sauvola e Pietikäinen}
                 \label{fig:baboon-sp}
             \end{subfigure}
             \begin{subfigure}{0.23\textwidth}
@@ -209,6 +225,14 @@
             \caption{Comparativo entre diversos métodos de limiarização}
             \label{fig:baboon-limiarizacao}
         \end{figure}
+
+        Os principais métodos que favorecem as características da imagem, de forma a destacar as linhas e detalhes sem grandes perdas visuais, são os locais: contraste (\cref{fig:baboon-contraste}), Bernsen (\cref{fig:baboon-bernsen}) e média (\cref{fig:baboon-media}).
+
+        Nesses métodos, podemos notar um destaque claro às principais linhas da imagem. Com métodos de realce, talvez seja possível isolar uma imagem ``caricatural'' do babuíno e identificar formatos parecidos por comparação.
+
+        Já em Niblack (\cref{fig:baboon-niblack}) e mediana (\cref{fig:baboon-mediana}), há uma proximidade aos mencionados anteriormente, mas as linhas que são destacadas pelos outros nesses métodos não são tão contínuas ou fortes. Isso tornaria a análise proposta (isolar detalhes através de processamento de imagem) mais difícil.
+
+        Nos outros métodos locais SP (\cref{fig:baboon-sp}) e PMS (\cref{fig:baboon-pms}), há muitas perdas pelo nível de brilho ou contraste inadequados à transformação aplicada. Já nos métodos globais (global, \cref{fig:baboon-global}, média e mediana -- cujas imagens não são mostradas por serem muito próximas às do limiar global).
 
 \section{Conclusão}
 
