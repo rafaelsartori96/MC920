@@ -14,7 +14,7 @@ from global_ import aplicar_global # k
 from bernsen import aplicar_bernsen
 from contraste import aplicar_filtro_contraste
 from niblack import aplicar_niblack # k
-from sauvola_pietikainen import aplicar_sauvola_pietikainen # k, R
+from sp import aplicar_sp # k, R
 from pms import aplicar_pms # k, R, p, q
 from media_local import aplicar_media as aplicar_media_local
 from media_global import aplicar_media as aplicar_media_global
@@ -31,9 +31,10 @@ if __name__ == '__main__':
         'bernsen': aplicar_bernsen,
         'contraste': aplicar_filtro_contraste,
         'niblack': aplicar_niblack,
-        'sauvola-pietikainen': aplicar_sauvola_pietikainen,
-        'pms': aplicar_pms, # alias
+        'sauvola-pietikainen': aplicar_sp,
+        'sp': aplicar_sp, # alias
         'phansalskar-more-sabale': aplicar_pms,
+        'pms': aplicar_pms, # alias
         'media-local': aplicar_media_local,
         'media-global': aplicar_media_global,
         'mediana-local': aplicar_mediana_local,

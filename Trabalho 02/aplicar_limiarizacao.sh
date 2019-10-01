@@ -29,7 +29,7 @@ for imagem in $IMAGENS; do
     # Flag histograma_in
     HISTOGRAMA_IN_FLAG="--histograma-original $HISTOGRAMA_IN"
 
-    for METODO in global bernsen niblack sauvola-pietikainen pms contraste media-local mediana-local media-global mediana-global; do
+    for METODO in global bernsen niblack sp pms contraste media-local mediana-local media-global mediana-global; do
         # Para cada método, definimos o nome do arquivo
         IMAGEM_OUT=$CAMINHO_SAIDA$ARQUIVO-final-$METODO.pgm
         HISTOGRAMA_OUT=$CAMINHO_SAIDA$ARQUIVO-histograma_out-$METODO.png

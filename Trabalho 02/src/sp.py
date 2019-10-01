@@ -12,7 +12,7 @@ import util
 
 
 # Aplicamos a limiarização de Sauvola-Pietikainen (removendo borda)
-def aplicar_sauvola_pietikainen(imagem, **kwargs):
+def aplicar_sp(imagem, **kwargs):
     return util.limiarizacao_local(imagem, aplicar_threshold, **kwargs)
 
 
