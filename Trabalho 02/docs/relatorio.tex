@@ -234,6 +234,81 @@
 
         Nos outros métodos locais SP (\cref{fig:baboon-sp}) e PMS (\cref{fig:baboon-pms}), há muitas perdas pelo nível de brilho ou contraste inadequados à transformação aplicada. Já nos métodos globais (global, \cref{fig:baboon-global}, média e mediana -- cujas imagens não são mostradas por serem muito próximas às do limiar global).
 
+    \subsection{\texttt{Fiducial}}
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.30\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial}
+                \caption{Imagem original \texttt{fiducial}}
+                \label{fig:fiducial}
+            \end{subfigure}
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-histograma_in}
+                \caption{Histograma da imagem original}
+                \label{fig:fiducial-histograma}
+            \end{subfigure}
+
+            \caption{Características da imagem original}
+        \end{figure}
+
+        Podemos notar na \cref{fig:baboon} que há diversos detalhes finos (como os fios da pelagem, as linhas do nariz e olho). A imagem é em maioria muito nítida e possui bom contraste (\cref{fig:baboon-histograma}).
+
+        \begin{figure}
+            \centering
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-global}
+                \caption{Método global}
+                \label{fig:fiducial-global}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-bernsen}
+                \caption{Método Bernsen}
+                \label{fig:fiducial-bernsen}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-niblack}
+                \caption{Método Niblack}
+                \label{fig:fiducial-niblack}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-sp}
+                \caption{Método de Sauvola e Pietikäinen}
+                \label{fig:fiducial-sp}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-pms}
+                \caption{Método PMS}
+                \label{fig:fiducial-pms}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-contraste}
+                \caption{Método do contraste}
+                \label{fig:fiducial-contraste}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-media-local}
+                \caption{Método da média local}
+                \label{fig:fiducial-media}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{fiducial-final-mediana-local}
+                \caption{Método da mediana local}
+                \label{fig:fiducial-mediana}
+            \end{subfigure}
+
+            \caption{Comparativo entre diversos métodos de limiarização}
+            \label{fig:fiducial-limiarizacao}
+        \end{figure}
+
+        Os principais métodos que favorecem as características da imagem, de forma a destacar as linhas e detalhes sem grandes perdas visuais, são os locais: contraste (\cref{fig:baboon-contraste}), Bernsen (\cref{fig:baboon-bernsen}) e média (\cref{fig:baboon-media}).
+
+        Nesses métodos, podemos notar um destaque claro às principais linhas da imagem. Com métodos de realce, talvez seja possível isolar uma imagem ``caricatural'' do babuíno e identificar formatos parecidos por comparação.
+
+        Já em Niblack (\cref{fig:baboon-niblack}) e mediana (\cref{fig:baboon-mediana}), há uma proximidade aos mencionados anteriormente, mas as linhas que são destacadas pelos outros nesses métodos não são tão contínuas ou fortes. Isso tornaria a análise proposta (isolar detalhes através de processamento de imagem) mais difícil.
+
+        Nos outros métodos locais SP (\cref{fig:baboon-sp}) e PMS (\cref{fig:baboon-pms}), há muitas perdas pelo nível de brilho ou contraste inadequados à transformação aplicada. Já nos métodos globais (global, \cref{fig:baboon-global}, média e mediana -- cujas imagens não são mostradas por serem muito próximas às do limiar global).
+
 \section{Conclusão}
 
     a

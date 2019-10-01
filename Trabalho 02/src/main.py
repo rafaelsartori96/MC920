@@ -127,11 +127,15 @@ if __name__ == '__main__':
     if argumentos['histograma_original'] is not None:
         # Fazemos o histograma da imagem inicial
         histograma, divisoes = np.histogram(
-            camada, bins=DIVISOES_HISTOGRAMA, range=(0, 255)
+            camada, bins=DIVISOES_HISTOGRAMA, range=(0, 255 + 1)
         )
 
         # Fazemos o plot
-        plt.hist(histograma, divisoes)
+        plt.bar(
+            # removemos uma divisão ('x' define posições, histogram, intervalos)
+            x=divisoes[:-1],
+            height=histograma
+        )
         # Definimos os títulos
         plt.title('Histograma da imagem original')
         plt.ylabel('Número de pixels')
