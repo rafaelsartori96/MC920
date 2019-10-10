@@ -49,7 +49,7 @@
 
     O trabalho é facilmente divisível em várias etapas. Para cumprir todos os objetivos, será necessário:
     \begin{itemize}
-        \item limiarizar a imagem de entrada,
+        \item monocromatizar a imagem de entrada,
         \item rotular objetos desconexos,
         \item contá-los,
         \item extrair propriedades,
@@ -58,16 +58,18 @@
 
     A razão para aplicação de cada um desses passos será explicada junto com sua metodologia.
 
-    \subsection{Limiarização}
+    Para a aplicação de fato, no entanto, iremos utilizar funções já implementadas de \emph{OpenCV}, cujo funcionamento não diferente tanto dos métodos descritos nesta seção.
+
+    \subsection{Monocromatização}
 
         Como a imagem de entrada é colorida, teremos mais de uma camada de cor e isso tornará difícil a identificação de um objeto ou fundo. Portanto, qualquer tipo de transformação que produza uma imagem de camada única é suficiente.
 
-        Faremos, então, uma limiarização para produzir uma saída binária em apenas uma camada.
+        Para produzir uma saída em apenas uma camada, podemos utilizar uma função que tem como parâmetro as várias camadas ou ainda fazer uma limiarização.
 
     \subsection{Rotulação e contagem}
     \label{sec:metodo-rotulacao}
 
-        Com a imagem limiarizada, podemos identificar os objetos através do agrupamento usando \texttt{vizinhança-4} ou \texttt{vizinhança-8}. Fazemos isso de acordo com o seguinte plano:
+        Com a imagem monocromática, podemos identificar os objetos através do agrupamento usando \texttt{vizinhança-4} ou \texttt{vizinhança-8}. Podemos fazer isso seguindo este plano:
         \begin{itemize}
             \item inicializamos uma variável que é o número do objeto que estamos identificando atualmente (começa com zero);
             \item inicializamos a matriz de ``resposta'' de mesma dimensão que a entrada com zero (ela guardará o rótulo e quais pontos pertencem a esse objeto);
@@ -80,15 +82,37 @@
             \item terminamos a imagem tendo percorrido todos os pontos e rotulado todos os objetos desconexos entre si.
         \end{itemize}
 
-        Automaticamente já contamos os objetos presentes, é o valor final da variável do número de objetos que identificamos.
+        Dessa forma, automaticamente já contamos os objetos presentes, é o valor final da variável do número de objetos que identificamos.
 
         Com essa matriz, será possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
 
     \subsection{Medir área e perímetro}
 
-        Do resultado do método anterior (\ref{sec:metodo-rotulacao}), podemos medir a área simplesmente contando os pontos que possuem mesmo valor ao rótulo do objeto. Por exemplo, para o rótulo 4, contamos o número de pontos cujo valor é 4 na matriz retornada.
+        Do resultado do método anterior (\ref{sec:metodo-rotulacao}), podemos medir a área simplesmente contando os pontos que possuem mesmo valor ao rótulo do objeto. Por exemplo, para o rótulo 4, contamos os pontos cujo valor é 4 na matriz retornada.
 
-        Já para o perímetro, é mais difícil: será necessário encontrar o contorno desses objetos e depois contar os pontos pertencentes. Há várias maneiras de se fazer isso: encontrando os que possuem alguma vizinhança com o fundo, utilizando morfologia matemática na imagem.
+        Já para o perímetro, é mais difícil: será necessário encontrar o contorno desses objetos e depois contar os pontos pertencentes a ele. Há algumas maneiras de se fazer isso, por exemplo: encontrando os que possuem alguma vizinhança com o fundo, utilizando morfologia matemática na imagem.
+
+    \subsection{Calculando centroide}
+
+        A centroide da imagem é a posição central $ (C_x, C_y) $ do objeto na imagem bidimensional, ou seja, a posição mediana em relação a área. Pode ser calculada por decomposição geométrica em pequenos retângulos (os pontos) através da \cref{eq:centroide}.
+
+        \begin{equation}
+            \label{eq:centroide}
+            C_l = \frac{\sum C_{i,l} A_i}{\sum A_i}
+        \end{equation}
+
+        Onde $l$ é a dimensão em que queremos calcular a centroide, $C_{i,l}$ é a coordenada na dimensão $l$ da $i$-ésima parte da decomposição do objeto $C$. Essa decomposição é feita automaticamente pela digitalização da imagem (em pequenos quadrados, os \textit{pixels}).
+
+    \subsection{Classificação quanto a àrea}
+
+        A classificação é mais simples. Com a área $A$ do objeto calculada, basta verificar em qual categoria se encaixa. São elas:
+        \begin{itemize}
+            \item pequeno, se $A < 1500$;
+            \item médio, se $A \in [1500, 3000)$;
+            \item grande, se $A \geq 3000$.
+        \end{itemize}
+
+        Com a classificação, produzimos um histograma em que, no eixo horizontal, temos o tamanho do objeto e, no vertical, a quantidade de objetos.
 
 \section{Resultados}
 
