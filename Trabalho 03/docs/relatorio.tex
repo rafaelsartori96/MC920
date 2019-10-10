@@ -42,7 +42,7 @@
 
     O objetivo deste trabalho é separar, rotular, contar objetos desconexos utilizando limiarização e análise de vizinhança, verificar propriedades, como área, perímetro, centroide e, por fim, classificar entre pequeno, médio e grande pela área ocupada.
 
-    Faremos isso utilizando um programa escrito em \emph{Python} utilizando a biblioteca padrão e \href{https://opencv.org/}{\emph{OpenCV}}.
+    Faremos isso utilizando um programa escrito em \emph{Python} utilizando a biblioteca padrão, \href{https://opencv.org/}{\emph{OpenCV}} para processar as imagens e \href{https://matplotlib.org/}{\emph{Matplotlib}} para histograma da área calculada dos objetos da imagem.
 
 
 \section{Método}
@@ -64,7 +64,8 @@
 
         Faremos, então, uma limiarização para produzir uma saída binária em apenas uma camada.
 
-    \subsection{Rotulação}
+    \subsection{Rotulação e contagem}
+    \label{sec:metodo-rotulacao}
 
         Com a imagem limiarizada, podemos identificar os objetos através do agrupamento usando \texttt{vizinhança-4} ou \texttt{vizinhança-8}. Fazemos isso de acordo com o seguinte plano:
         \begin{itemize}
@@ -79,7 +80,15 @@
             \item terminamos a imagem tendo percorrido todos os pontos e rotulado todos os objetos desconexos entre si.
         \end{itemize}
 
-        Com essa matriz, é possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
+        Automaticamente já contamos os objetos presentes, é o valor final da variável do número de objetos que identificamos.
+
+        Com essa matriz, será possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
+
+    \subsection{Medir área e perímetro}
+
+        Do resultado do método anterior (\ref{sec:metodo-rotulacao}), podemos medir a área simplesmente contando os pontos que possuem mesmo valor ao rótulo do objeto. Por exemplo, para o rótulo 4, contamos o número de pontos cujo valor é 4 na matriz retornada.
+
+        Já para o perímetro, é mais difícil: será necessário encontrar o contorno desses objetos e depois contar os pontos pertencentes. Há várias maneiras de se fazer isso: encontrando os que possuem alguma vizinhança com o fundo, utilizando morfologia matemática na imagem.
 
 \section{Resultados}
 
