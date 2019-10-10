@@ -1,0 +1,94 @@
+% Rafael Sartori M. dos Santos, 186154
+\documentclass[brazilian,a4paper,twocolumn]{article}
+
+% Título
+\title{MC920 -- Trabalho 3}
+\author{Rafael Sartori M. Santos, 186154}
+\date{17 de outubro de 2019}
+
+% Configuração do documento
+\setlength{\parskip}{3pt}
+\usepackage[utf8]{inputenc} % tipo de documento UTF-8
+\usepackage{mathtools} % permitir expressões matemáticas
+\usepackage{breqn} % equações quebradas em várias linhas automaticamente
+\usepackage{babel} % configuração da lingua portuguesa
+\usepackage{caption} % para legenda de tabelas e figuras
+\usepackage[
+    pdfauthor={Rafael Sartori M. Santos},
+    pdftitle={Trabalho 3 -- MC920},
+    pdfproducer={LaTeX (texlive) com hyperref},
+    hidelinks
+]{hyperref} % para links externos (href)
+\usepackage{cleveref} % para referenciar tabelas e figuras melhor
+\usepackage{indentfirst} % indentação de todo primeiro parágrafo
+\usepackage{graphicx} % para adicionar imagens
+\graphicspath{{../imgs/}} % atalho para o caminho das imagens
+\usepackage{float} % para fixar posição de imagens
+\usepackage{subcaption} % para imagens ficarem lado a lado
+% Usamos geometry pois dá mais espaço que fullpage
+%\usepackage{geometry} % alterar geometria do papel
+%\geometry{a4paper,left=1.7cm,right=1.7cm,top=1cm,bottom=2.0cm} % menor margem
+\usepackage{fullpage} % utilizamos uma versão com menos espaçamento nas bordas
+\usepackage{verbatim} % pacote para incluir arquivos em verbatim
+\usepackage{mdframed} % para enquadrar coisas
+
+% Início do documento
+\begin{document}
+
+\maketitle
+
+
+\section{Introdução}
+
+    O objetivo deste trabalho é separar, rotular, contar objetos desconexos utilizando limiarização e análise de vizinhança, verificar propriedades, como área, perímetro, centroide e, por fim, classificar entre pequeno, médio e grande pela área ocupada.
+
+    Faremos isso utilizando um programa escrito em \emph{Python} utilizando a biblioteca padrão e \href{https://opencv.org/}{\emph{OpenCV}}.
+
+
+\section{Método}
+
+    O trabalho é facilmente divisível em várias etapas. Para cumprir todos os objetivos, será necessário:
+    \begin{itemize}
+        \item limiarizar a imagem de entrada,
+        \item rotular objetos desconexos,
+        \item contá-los,
+        \item extrair propriedades,
+        \item classificá-los quanto à área.
+    \end{itemize}
+
+    A razão para aplicação de cada um desses passos será explicada junto com sua metodologia.
+
+    \subsection{Limiarização}
+
+        Como a imagem de entrada é colorida, teremos mais de uma camada de cor e isso tornará difícil a identificação de um objeto ou fundo. Portanto, qualquer tipo de transformação que produza uma imagem de camada única é suficiente.
+
+        Faremos, então, uma limiarização para produzir uma saída binária em apenas uma camada.
+
+    \subsection{Rotulação}
+
+        Com a imagem limiarizada, podemos identificar os objetos através do agrupamento usando \texttt{vizinhança-4} ou \texttt{vizinhança-8}. Fazemos isso de acordo com o seguinte plano:
+        \begin{itemize}
+            \item inicializamos uma variável que é o número do objeto que estamos identificando atualmente (começa com zero);
+            \item inicializamos a matriz de ``resposta'' de mesma dimensão que a entrada com zero (ela guardará o rótulo e quais pontos pertencem a esse objeto);
+            \item percorremos a imagem toda; ao encontrarmos um objeto (não fundo), fazemos:
+            \begin{itemize}
+                \item incrementamos a variável do objeto que estamos identificando, esse é o número do objeto atual;
+                \item navegaremos dentro dele utilizando a vizinhança selecionada, marcando numa matriz de ``resposta'' o número do objeto atual;
+                \item ao não possuir mais pontos que não são fundo alcançáveis pela vizinhança, continuamos percorrendo a imagem.
+            \end{itemize}
+            \item terminamos a imagem tendo percorrido todos os pontos e rotulado todos os objetos desconexos entre si.
+        \end{itemize}
+
+        Com essa matriz, é possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
+
+\section{Resultados}
+
+    .
+
+
+\section{Conclusão}
+
+    .
+
+
+\end{document}
