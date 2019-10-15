@@ -42,7 +42,7 @@
 
     O objetivo deste trabalho é separar, rotular, contar objetos desconexos utilizando limiarização e análise de vizinhança, verificar propriedades, como área, perímetro, centroide e, por fim, classificar entre pequeno, médio e grande pela área ocupada.
 
-    Faremos isso utilizando um programa escrito em \emph{Python} utilizando a biblioteca padrão, \href{https://opencv.org/}{\emph{OpenCV}} para processar as imagens e \href{https://matplotlib.org/}{\emph{Matplotlib}} para histograma da área calculada dos objetos da imagem.
+    Faremos isso utilizando um programa escrito em \emph{Python} utilizando a biblioteca padrão, \href{https://opencv.org/}{\emph{OpenCV}} e \href{https://scikit-image.org/}{\emph{scikit-image}} para processar as imagens e \href{https://matplotlib.org/}{\emph{Matplotlib}} para histograma da área calculada dos objetos da imagem.
 
 
 \section{Método}
@@ -66,6 +66,8 @@
 
         Para produzir uma saída em apenas uma camada, podemos utilizar uma função que tem como parâmetro as várias camadas ou ainda fazer uma limiarização.
 
+        Na aplicação, abrimos a imagem em modo de escala de cinza através do \emph{OpenCV}.
+
     \subsection{Rotulação e contagem}
     \label{sec:metodo-rotulacao}
 
@@ -85,6 +87,8 @@
         Dessa forma, automaticamente já contamos os objetos presentes, é o valor final da variável do número de objetos que identificamos.
 
         Com essa matriz, será possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
+
+        Esse trabalho é feito pelo \emph{scikit-image} através da função \texttt{getprops}
 
     \subsection{Medir área e perímetro}
 
