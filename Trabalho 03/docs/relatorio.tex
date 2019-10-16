@@ -58,7 +58,7 @@
 
     A razão para aplicação de cada um desses passos será explicada junto com sua metodologia.
 
-    Para a aplicação de fato, no entanto, iremos utilizar funções já implementadas de \emph{OpenCV}, cujo funcionamento não diferente tanto dos métodos descritos nesta seção.
+    Para a aplicação de fato, no entanto, iremos utilizar funções já implementadas de \emph{OpenCV} e \emph{scikit-image}, já que seus funcionamentos não diferem tanto dos métodos descritos nesta seção.
 
     \subsection{Monocromatização}
 
@@ -66,7 +66,7 @@
 
         Para produzir uma saída em apenas uma camada, podemos utilizar uma função que tem como parâmetro as várias camadas ou ainda fazer uma limiarização.
 
-        Na aplicação, abrimos a imagem em modo de escala de cinza através do \emph{OpenCV}.
+        Na aplicação, abrimos a imagem em modo de escala de cinza através da \textit{flag} em \emph{OpenCV}.
 
     \subsection{Rotulação e contagem}
     \label{sec:metodo-rotulacao}
@@ -88,13 +88,16 @@
 
         Com essa matriz, será possível contar a área, identificar perímetro e encontrar centroide de cada objeto.
 
-        Esse trabalho é feito pelo \emph{scikit-image} através da função \texttt{getprops}
+        Essa etapa é realizada pelo \emph{scikit-image} através da função \texttt{label}, que identifica e rotula objetos desconexos dada uma vizinhança.
 
     \subsection{Medir área e perímetro}
+    \label{sec:metodo-area-perimetro}
 
         Do resultado do método anterior (\ref{sec:metodo-rotulacao}), podemos medir a área simplesmente contando os pontos que possuem mesmo valor ao rótulo do objeto. Por exemplo, para o rótulo 4, contamos os pontos cujo valor é 4 na matriz retornada.
 
         Já para o perímetro, é mais difícil: será necessário encontrar o contorno desses objetos e depois contar os pontos pertencentes a ele. Há algumas maneiras de se fazer isso, por exemplo: encontrando os que possuem alguma vizinhança com o fundo, utilizando morfologia matemática na imagem.
+
+        Essa etapa é realizada através das funções \texttt{getprops} (utilizando a rotulação anterior) e \texttt{perimeter} (isolando os pontos dos rótulos individualmente) do \emph{scikit-image}.
 
     \subsection{Calculando centroide}
 
@@ -107,6 +110,8 @@
 
         Onde $l$ é a dimensão em que queremos calcular a centroide, $C_{i,l}$ é a coordenada na dimensão $l$ da $i$-ésima parte da decomposição do objeto $C$. Essa decomposição é feita automaticamente pela digitalização da imagem (em pequenos quadrados, os \textit{pixels}).
 
+        Esse passo no código já é realizado na \cref{sec:metodo-area-perimetro} pelo \texttt{getprops}.
+
     \subsection{Classificação quanto a àrea}
 
         A classificação é mais simples. Com a área $A$ do objeto calculada, basta verificar em qual categoria se encaixa. São elas:
@@ -118,6 +123,8 @@
 
         Com a classificação, produzimos um histograma em que, no eixo horizontal, temos o tamanho do objeto e, no vertical, a quantidade de objetos.
 
+        O histograma é feito pelo \emph{Matplotlib}.
+
 \section{Resultados}
 
     .
@@ -125,7 +132,10 @@
 
 \section{Conclusão}
 
-    .
+    O trabalho mostra que, a partir de uma simplificação de uma imagem (que pode ser facilmente obtida se as condições são controladas), é rápido determinar a área, posição e tamanho de objetos, informações muito requisitadas em automação industrial, por exemplo, para verificação.
 
+    Com as informações obtidas, como o contorno, conseguimos comparar com o que era esperado através de funções matemáticas e/ou outros algoritmos estudados na disciplina.
+
+    Os resultados foram bastante satisfatórios e pouca correção foi necessária dado que as funções já foram implementadas e testadas pelas bibliotecas.
 
 \end{document}
