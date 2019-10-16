@@ -1,0 +1,23 @@
+Número de regiões: 18
+região 1: área: 162865 centróide: (163.45, 279.92) perímetro: 3954.17
+região 2: área: 2162 centróide: (29.00, 202.50) perímetro: 182.00
+região 3: área: 2162 centróide: (29.00, 422.50) perímetro: 182.00
+região 4: área: 210 centróide: (29.00, 139.50) perímetro: 54.00
+região 5: área: 210 centróide: (60.50, 92.00) perímetro: 54.00
+região 6: área: 2116 centróide: (107.50, 29.50) perímetro: 180.00
+região 7: área: 210 centróide: (92.00, 375.50) perímetro: 54.00
+região 8: área: 225 centróide: (108.00, 454.00) perímetro: 56.00
+região 9: área: 2162 centróide: (155.00, 454.50) perímetro: 182.00
+região 10: área: 225 centróide: (139.00, 533.00) perímetro: 56.00
+região 11: área: 225 centróide: (171.00, 391.00) perímetro: 56.00
+região 12: área: 2162 centróide: (202.50, 171.00) perímetro: 182.00
+região 13: área: 2162 centróide: (202.50, 533.00) perímetro: 182.00
+região 14: área: 225 centróide: (202.00, 470.00) perímetro: 56.00
+região 15: área: 210 centróide: (234.00, 265.50) perímetro: 54.00
+região 16: área: 2116 centróide: (265.50, 328.50) perímetro: 180.00
+região 17: área: 2162 centróide: (296.50, 108.00) perímetro: 182.00
+região 18: área: 210 centróide: (312.50, 360.00) perímetro: 54.00
+
+número de regiões pequenas: 9
+número de regiões médias: 8
+número de regiões grandes: 1

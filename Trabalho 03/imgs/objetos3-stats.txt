@@ -1,0 +1,15 @@
+Número de regiões: 10
+região 1: área: 40387 centróide: (120.47, 117.01) perímetro: 2559.03
+região 2: área: 3969 centróide: (68.51, 147.77) perímetro: 313.76
+região 3: área: 791 centróide: (43.97, 94.10) perímetro: 119.98
+região 4: área: 3584 centróide: (80.95, 63.04) perímetro: 259.46
+região 5: área: 540 centróide: (70.46, 206.90) perímetro: 99.25
+região 6: área: 438 centróide: (116.38, 208.15) perímetro: 88.77
+região 7: área: 1684 centróide: (140.42, 126.64) perímetro: 174.12
+região 8: área: 642 centróide: (137.93, 27.62) perímetro: 103.01
+região 9: área: 3934 centróide: (182.72, 156.60) perímetro: 305.42
+região 10: área: 675 centróide: (173.38, 73.65) perímetro: 96.33
+
+número de regiões pequenas: 5
+número de regiões médias: 1
+número de regiões grandes: 4
