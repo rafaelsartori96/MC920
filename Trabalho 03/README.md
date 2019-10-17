@@ -10,19 +10,14 @@ O programa Python fica na pasta `src/`, a função principal está em `main.py`,
 
 ### Execução
 
+Requer os programas enunciados em [`requirements.txt`](../requirements.txt).
+
 Para executar o programa, veja:
 ```
 $ python3 main.py --help
 ```
 
-Podemos especificar o método de limiarização, devemos especificar a imagem de entrada e saída.
-
-Para execução automática (em todas as imagens da pasta `imgs/`), execute:
-```
-$ bash aplicar_limiarizacao.sh
-```
-
-Para execução automática em paralelo, é necessário definir qualquer valor à _environment variable_ `MC920_PARALELO` e executar o _script_ da mesma forma.
+Podemos especificar vários parâmetros para extração adicional de informações, como histograma, contornos de regiões e regiões.
 
 
 ### Relatório
