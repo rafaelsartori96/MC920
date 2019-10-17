@@ -4,7 +4,7 @@
 
 ## Pré-requisitos
 
-É necessário possuir `virtualenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/) e [numpy](https://www.numpy.org/).
+É necessário possuir `virtualenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/), [numpy](https://www.numpy.org/) e [scikit-image](https://scikit-image.org/).
 
 ## Instalação e execução do ambiente
 
@@ -22,13 +22,15 @@ $ source .venv/bin/activate
 
 # E, no ambiente, podemos o notebook:
 (.venv) $ jupyter notebook
-# ou ainda executar os scripts dos trabalhos:
+# ou executar os scripts dos trabalhos:
 (.venv) $ cd Trabalho\ 02/
 (.venv) $ sh aplicar_limiarizacao.sh
+# ou ainda executar os programas diretamente:
+(.venv) $ python3 src/main.py
 ```
 
 ## Organização do projeto
 
-Cada trabalho será um Notebook diferente no Jupyter, as imagens estarão dentro de cada trabalho, assim como a saída dos programas. Há algumas funções de utilidade que provavelmente utilizarei em mais de um trabalho, deixei no módulo Python `util` (na raiz do projeto).
+Cada trabalho será uma pasta diferente, as imagens estarão dentro de cada trabalho, assim como a saída dos programas. Ou seja, cada trabalho será praticamente autocontido.
 
 Os slides e materiais em aulas (`Aulas/`) foram feitos pelo prof. Pedrini. Se houver qualquer problema em mantê-los aqui, as removerei assim que requisitado.
