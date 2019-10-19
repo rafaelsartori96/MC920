@@ -1,4 +1,4 @@
-## Trabalho 2
+## Trabalho 3
 
 Programa para rotulação e extração de informações quantitativas de objetos em imagens simples escrito por Rafael Sartori M. Santos, RA 186154 para disciplina de processamento de imagem (MC920) com H. Pedrini na Unicamp.
 
