@@ -7,6 +7,8 @@ import cv2
 import argparse
 import numpy as np
 import skimage.measure as skm
+import matplotlib.pyplot as plt
+
 
 if __name__ == '__main__':
     # Criamos um parser de argumentos do programa
@@ -29,6 +31,13 @@ if __name__ == '__main__':
         '-pr','--print-regions',
         metavar='caminho',
         help="Imprime as imagens das regiões em uma pasta."
+    )
+    # argumento para imprimirmos histograma
+    parser.add_argument(
+        '-ph','--print-histogram',
+        metavar='caminho',
+        help="Salva do histograma dos tamanhos das regiões. Utiliza formatos do"
+        " matplotlib (permite PDF, PNG etc)."
     )
     # argumento para imprimirmos as regiões separadamente
     parser.add_argument(
@@ -125,8 +134,29 @@ if __name__ == '__main__':
     if argumentos['img_contour'] is not None:
         cv2.imwrite(argumentos['img_contour'], img_contornos)
 
+    # Dados para histograma
+    bar_x = []
+    bar_height = []
+
     # Imprimimos a categorização
     print()
     for categoria, (condicao, lista) in categorias.items():
         print('número de regiões {}: {}'.format(categoria, len(lista)))
+        # Adicionamos ao histograma
+        bar_x.append(u'{}'.format(categoria))
+        bar_height.append(len(lista))
 
+    # Conferimos se é necessário salvar o histograma
+    if argumentos['print_histogram'] is not None:
+        # Salvamos o histograma através de uma barra no matplotlib
+        # Fonte: https://stackoverflow.com/questions/30228069/how-to-display-the-value-of-the-bar-on-each-bar-with-pyplot-barh
+        plot, axis = plt.subplots()
+        indices = np.arange(len(bar_x))
+        width = 0.75
+        plt.barh(indices, bar_height, width)
+        axis.set_yticks(indices)
+        axis.set_yticklabels(bar_x, minor=False)
+        plt.ylabel('Categoria')
+        plt.xlabel('Número de objetos')
+        plt.title('Histograma do tamanho dos objetos')
+        plt.savefig(argumentos['print_histogram'])
