@@ -74,23 +74,62 @@ if __name__ == '__main__':
     if argumentos['ask_passphrase'] and passphrase is None:
         passphrase = getpass.getpass('Entre com a senha para a mensagem: ')
 
-    # Se definimos uma passphrase (entrada ou argumento)
+    # Transformamos a mensagem em bytes (com AES ou sem)
     if passphrase is not None:
         # Passamos o texto por AES (retorna bytes)
         texto_entrada = aes.aes_encrypt(texto_entrada, passphrase)
     else:
-        # convertemos para vetor de bytes (para termos isso com e sem AES)
+        # convertemos texto para vetor de bytes simplesmente
         texto_entrada = str.encode(texto_entrada)
+    # Calculamos seu tamanho
+    tamanho_mensagem = len(texto_entrada)
+
+    # Criamos um bytearray para armazenar a mensagem
+    mensagem_bytes = bytearray()
+    # Adicionamos a quantidade de bytes a serem lidos antes da mensagem
+    mensagem_bytes.extend((tamanho_mensagem).to_bytes(4, 'big'))
+    # Adicionamos a mensagem
+    mensagem_bytes.extend(texto_entrada)
+    tamanho_bytes = len(mensagem_bytes)
+    print('tamanho =', tamanho_mensagem, 'tamanho array =', tamanho_bytes)
 
     ## Incluímos a mensagem na imagem
 
     # Abrimos as camadas da imagem
     entrada = abrir_imagem(caminho_entrada)
+
     # Preparamos matrizes que serão utilizadas para incluir a mensagem na imagem
     mensagem = np.zeros(entrada.shape)
     mascara = np.zeros(entrada.shape)
     # Percorremos o texto de entrada para colocar na matriz mensagem
     # Observação: iteramos nas camadas primeiro, depois colunas e depois linhas
-#    with np.nditer(a, op_flags=['writeonly']) as it:
-#        for x in it:
-#            x[...] = 2 * x
+    with np.nditer(mensagem, op_flags=['writeonly']) as it_mensagem:
+        with np.nditer(mascara, op_flags=['writeonly']) as it_mascara:
+            # Pegamos a mensagem byte a byte
+            indice = 0
+            byte = mensagem_bytes[indice]
+            bits = 8
+            for msg in it_mensagem:
+                # Preenchemos a mensagem com o bit correspondente
+                msg[...] = (byte & 1)
+                # Preenchemos a máscara com 1
+                msc = next(it_mascara)
+                msc[...] = 1
+                # Fazemos o shift do byte para trazer o mais significativo
+                byte = byte >> 1
+                # Indicamos que já lemos um bit do byte
+                bits -= 1
+                # Se acabamos os bits desse byte, pegamos outro
+                if bits == 0:
+                    # Restauramos o contador de bits remanescentes
+                    bits = 8
+                    # Adicionamos um ao índice do byte que estamos
+                    indice += 1
+                    # Verificamos se acabamos a mensagem
+                    if indice >= tamanho_bytes:
+                        break
+                    # Se não acabamos, pegamos a próxima
+                    byte = mensagem_bytes[indice]
+
+    # Agora temos a máscara com todos os bits afetados e a mensagem em uma
+    # matriz binária. Basta colocarmos na imagem no plano correspondente
