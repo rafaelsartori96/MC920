@@ -4,7 +4,7 @@
 
 ## Pré-requisitos
 
-É necessário possuir `virtualenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/), [numpy](https://www.numpy.org/) e [scikit-image](https://scikit-image.org/).
+É necessário possuir `virtualenv` para instalar o _virtual environment_ utilizado nos projetos, como [OpenCV](https://opencv.org/) (que, no nosso caso, será o [disponível em pip](https://pypi.org/project/opencv-python/)), [Jupyter Notebook](https://jupyter.org/), [numpy](https://www.numpy.org/), [scikit-image](https://scikit-image.org/) e [PyCrypto](https://www.pycryptodome.org/) (em sua implementação atualizada, `pycryptodome`).
 
 ## Instalação e execução do ambiente
 
@@ -28,6 +28,8 @@ $ source .venv/bin/activate
 # ou ainda executar os programas diretamente:
 (.venv) $ python3 src/main.py
 ```
+
+Veja o README de cada trabalho para entender a organização dos projetos individualmente.
 
 ## Organização do projeto
 
