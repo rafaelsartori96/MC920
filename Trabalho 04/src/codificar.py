@@ -53,10 +53,17 @@ if __name__ == '__main__':
         help='Se mencionado, utilizará a senha fornecida para o algoritmo AES.'
     )
 
+    # argumento opcional para imprimir o que fazemos
+    parser.add_argument(
+        '-v','--verbose',
+        action='store_true',
+        help='Se mencionado, informará o usuário do que o programa está'
+        ' fazendo.'
+    )
+
     ## Recebemos as entradas
 
     argumentos = vars(parser.parse_args())
-    print('argumentos:', argumentos)
     # caminho dos arquivos de imagem
     caminho_entrada = argumentos['imagem_entrada']
     caminho_saida = argumentos['imagem_saida']
@@ -64,6 +71,26 @@ if __name__ == '__main__':
     plano_bits = argumentos['plano_bits']
     # texto a ser escondido
     texto_entrada = argumentos['texto_entrada'].read() # lemos o arquivo todo
+    # se imprimiremos outputs
+    verbose = argumentos['verbose']
+
+    # Declaramos função para verbose
+    if verbose:
+        def verbose(*args, **kwargs):
+            print(*args, **kwargs)
+    else:
+        def verbose(*args, **kwargs):
+            pass
+
+    verbose('argumentos:', argumentos)
+
+    # Conferimos o formato de saída
+    if '.png' not in caminho_saida:
+        # Adicionamos ".png"
+        caminho_saida = caminho_saida + ".png"
+        # Avisamos usuário
+        print('O formato de saída parece não ser PNG. Adicionando extensão '
+        '".png" no formato:', caminho_saida)
 
     ## Transformamos o texto de entrada a depender dos argumentos de passphrase
 
@@ -92,13 +119,29 @@ if __name__ == '__main__':
     # Adicionamos a mensagem
     mensagem_bytes.extend(texto_entrada)
     tamanho_bytes = len(mensagem_bytes)
-    print('tamanho =', tamanho_mensagem, 'tamanho array =', tamanho_bytes)
 
     ## Incluímos a mensagem na imagem
 
     # Abrimos as camadas da imagem
     entrada = abrir_imagem(caminho_entrada)
 
+    # Calculamos espaço disponível
+    # linhas x colunas x camadas de cores / 8 bits por byte
+    # (dividimos por 8 pois podemos utilizar apenas um bit em cada ponto da
+    # imagem)
+    tamanho_disponivel = entrada.size / 8
+    razao_espaco_utilizado = tamanho_bytes / tamanho_disponivel
+    verbose(
+        'tamanho da mensagem:', tamanho_mensagem,
+        'espaço necessário:', tamanho_bytes,
+        'espaço disponível:', tamanho_disponivel,
+        'espaço utilizado: {:.3f}'.format(razao_espaco_utilizado)
+    )
+    # Avisamos usuário se espaço utilizado é muito grande
+    if razao_espaco_utilizado > 1:
+        print('Não há espaço suficiente para a mensagem. Tentamos mesmo assim.')
+
+    verbose('Preparando máscara de bits para mistura com imagem')
     # Preparamos matrizes que serão utilizadas para incluir a mensagem na imagem
     mensagem = np.zeros(entrada.shape, dtype=int)
     mascara = np.zeros(entrada.shape, dtype=int)
@@ -131,12 +174,33 @@ if __name__ == '__main__':
                         break
                     # Se não acabamos, pegamos a próxima
                     byte = mensagem_bytes[indice]
+            # Conferimos se salvamos toda a mensagem
+            if indice < tamanho_bytes:
+                raise Exception(
+                    'Não há espaço suficiente na memória para mensagem! Foi '
+                    'possível inserir apenas {} bytes.'.format(indice)
+                )
 
     # Agora temos a máscara com todos os bits afetados e a mensagem em uma
     # matriz binária. Basta colocarmos na imagem no plano correspondente.
 
     # Corrigimos a máscara para o plano de bit que desejamos
+    mensagem = np.left_shift(mensagem, int(plano_bits))
     mascara = np.left_shift(mascara, int(plano_bits))
     # Invertemos a máscara para retirar os bits da imagem principal utilizando
     # um NOT
     mascara_not = np.invert(mascara)
+    verbose('Máscaras prontas')
+
+    # Zeramos os bits da imagem
+    verbose('Preparando imagem')
+    entrada = np.bitwise_and(entrada, mascara_not)
+    verbose('Imagem pronta para receber mensagem')
+
+    # Incluímos a mensagem na imagem com bits zerados
+    verbose('Incluindo mensagem na imagem')
+    saida = np.bitwise_or(entrada, mensagem)
+
+    # Salvamos a imagem
+    verbose('Mensagem na imagem, salvando imagem')
+    salvar_imagem(caminho_saida, saida)
