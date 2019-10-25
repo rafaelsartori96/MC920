@@ -7,7 +7,6 @@ import argparse # para recebermos as entradas facilmente
 
 import numpy as np
 
-import aes # funções para codificação e decodificação AES
 from util import * # funções de utilidades do projeto
 
 
@@ -76,6 +75,8 @@ if __name__ == '__main__':
 
     # Transformamos a mensagem em bytes (com AES ou sem)
     if passphrase is not None:
+        # Importamos nossas funções para codificação e decodificação AES
+        import aes
         # Passamos o texto por AES (retorna bytes)
         texto_entrada = aes.aes_encrypt(texto_entrada, passphrase)
     else:
@@ -99,8 +100,8 @@ if __name__ == '__main__':
     entrada = abrir_imagem(caminho_entrada)
 
     # Preparamos matrizes que serão utilizadas para incluir a mensagem na imagem
-    mensagem = np.zeros(entrada.shape)
-    mascara = np.zeros(entrada.shape)
+    mensagem = np.zeros(entrada.shape, dtype=int)
+    mascara = np.zeros(entrada.shape, dtype=int)
     # Percorremos o texto de entrada para colocar na matriz mensagem
     # Observação: iteramos nas camadas primeiro, depois colunas e depois linhas
     with np.nditer(mensagem, op_flags=['writeonly']) as it_mensagem:
@@ -132,4 +133,10 @@ if __name__ == '__main__':
                     byte = mensagem_bytes[indice]
 
     # Agora temos a máscara com todos os bits afetados e a mensagem em uma
-    # matriz binária. Basta colocarmos na imagem no plano correspondente
+    # matriz binária. Basta colocarmos na imagem no plano correspondente.
+
+    # Corrigimos a máscara para o plano de bit que desejamos
+    mascara = np.left_shift(mascara, int(plano_bits))
+    # Invertemos a máscara para retirar os bits da imagem principal utilizando
+    # um NOT
+    mascara_not = np.invert(mascara)
