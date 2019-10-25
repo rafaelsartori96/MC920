@@ -44,20 +44,29 @@
 
     O objetivo do trabalho é a codificação e decodificação de mensagens dentro de imagens e verificar se as novas informações produzem algum artefato visual na imagem. Como exigido pelo enunciado, haverá 2 programas: um para codificação e outro para decodificação.
 
-    Faremos esses programas utilizando Python com as bibliotecas \href{https://opencv.org/}{\emph{OpenCV}}, \href{https://numpy.org/}{\emph{NumPy}}, \href{https://pycrypto.org/}{\emph{pycrypto}} e padrão.
-
-    Também utilizaremos \href{https://www.gimp.org/}{\emph{GIMP}} para alterar o formato da imagem que utilizaremos.
+    Faremos esses programas utilizando Python com as bibliotecas \href{https://opencv.org/}{\emph{OpenCV}}, \href{https://numpy.org/}{\emph{NumPy}}, \href{https://www.pycryptodome.org/}{\emph{pycrypto} (sua implementação atualizada, \emph{pycryptodome})} e padrão.
 
 
 \section{Metodologia}
 
     No programa de codificação, precisamos receber uma imagem e um arquivo a ser codificado. Então abrimos essa imagem, alteramos um único \textit{bit} para cada ponto e camada da imagem, escrevendo a mensagem que desejamos, e salvamos a imagem de saída.
 
-    No de decodificação, recebemos a imagem com a mensagem codificada, abrimos e isolamos o \textit{bit} desejado, acumulando num vetor binário que será posteriormente convertido a texto para salvarmos.
+    No de decodificação, recebemos a imagem com a mensagem codificada, abrimos e isolamos o \textit{bit} desejado, acumulando num vetor binário que será posteriormente convertido em um arquivo de texto decodificado.
 
     Com esses passos gerais, começamos preparando a imagem, alterando seu formato em um programa externo.
 
     \subsection{Preparação da imagem}
+
         É um requisito trabalhar de forma \textit{lossless} (sem perdas) para manter todas as informações da imagem intactas, garantindo a integridade da mensagem. Isto é, algoritmos de compressão \textit{lossy} podem degradar a imagem e possivelmente causar a corrupção da mensagem.
+
+        Apesar disso, a imagem carregada pelo \emph{OpenCV} não precisa ser de um formato \textit{lossless} pois a biblioteca consegue abrir em um formato e salvar em outro. Há, portanto, apenas uma importância: salvar a imagem sem perdas.
+
+        Para isso, o programa sempre exigirá o formato \texttt{PNG} para a saída, adicionando a extensão ``\texttt{.png}'' caso não esteja mencionado na entrada.
+
+    \subsection{Preparação da mensagem}
+
+        O programa será capaz de encriptar de forma segura através de uma senha protegendo a mensagem utilizando o algoritmo seguro \texttt{AES}, retornando um vetor de \textit{bytes}. Caso a senha não seja fornecida, a mensagem é interpretada apenas pelos seus \textit{bytes} \texttt{ASCII}.
+
+        Esses \textit{bytes} serão divididos em uma matriz de mesmo tamanho da imagem, contendo apenas um \textit{bit} por posição correspondendo a imagem.
 
 \end{document}
