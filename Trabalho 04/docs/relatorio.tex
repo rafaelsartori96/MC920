@@ -65,8 +65,14 @@
 
     \subsection{Preparação da mensagem}
 
-        O programa será capaz de encriptar de forma segura através de uma senha protegendo a mensagem utilizando o algoritmo seguro \texttt{AES}, retornando um vetor de \textit{bytes}. Caso a senha não seja fornecida, a mensagem é interpretada apenas pelos seus \textit{bytes} \texttt{ASCII}.
+        O programa será capaz de encriptar a mensagem de forma segura utilizando uma senha e o algoritmo \texttt{AES}, produzindo um vetor de \textit{bytes}. Caso a senha não seja fornecida, a mensagem é interpretada apenas pelos \textit{bytes} que compõem a \textit{string}.
 
-        Esses \textit{bytes} serão divididos em uma matriz de mesmo tamanho da imagem, contendo apenas um \textit{bit} por posição correspondendo a imagem.
+        Esses \textit{bytes} serão divididos em uma matriz de mesmo tamanho da imagem, contendo apenas um \textit{bit} por posição correspondendo a imagem. Ou seja, dividiremos cada \textit{byte} em 8 \textit{bits} na matriz que possui dimensão igual à da imagem.
+
+        A matriz precisa ser menor ou no máximo de mesmo tamanho à imagem e cada valor precisa ocupar no máximo um \textit{bit}. Caso isso não for verdade, não conseguiremos incluir toda mensagem na imagem sem maiores perdas, pois nos comprometemos pelo enunciado a utilizar apenas um plano de \textit{bits} da imagem. O efeito de qual plano de \textit{bits} devemos escolher para diminuir artefatos visuais será discutido na \cref{sec:efeito-plano-bits} com os resultados.
+
+        Um problema que haverá com esta metodologia é que, como os \textit{bytes} retornados pelo \texttt{AES} não representam um texto em \texttt{ASCII}, não podemos confiar que haverá um caractere terminal \texttt{\textbackslash0}. Devemos, portanto, incluir alguma forma de saber onde a mensagem secreta acaba. Fazemos isso através de um inteiro a ser colocado no preâmbulo: o número de \textit{bytes} da mensagem a ser escrita na imagem.
+
+    \label{sec:efeito-plano-bits}
 
 \end{document}
