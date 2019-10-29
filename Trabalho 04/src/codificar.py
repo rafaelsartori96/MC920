@@ -5,7 +5,7 @@
 import getpass # para pedir senha
 import argparse # para recebermos as entradas facilmente
 
-import numpy as np
+import numpy as np # para manipulações da imagem
 
 from util import * # funções de utilidades do projeto
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     parser.add_argument(
         'texto_entrada',
         type=open,
-        help="Arquivo de texto que condém a mensagem a ser codificada."
+        help="Arquivo de texto que contém a mensagem a ser codificada."
     )
     # argumento para definir o plano de bits a serem utilizados
     parser.add_argument(
@@ -61,6 +61,7 @@ if __name__ == '__main__':
         ' fazendo.'
     )
 
+
     ## Recebemos as entradas
 
     argumentos = vars(parser.parse_args())
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     caminho_entrada = argumentos['imagem_entrada']
     caminho_saida = argumentos['imagem_saida']
     # plano a ser utilizado para a mensagem
-    plano_bits = argumentos['plano_bits']
+    plano_bits = int(argumentos['plano_bits'])
     # texto a ser escondido
     texto_entrada = argumentos['texto_entrada'].read() # lemos o arquivo todo
     # se imprimiremos outputs
@@ -85,12 +86,13 @@ if __name__ == '__main__':
     verbose('argumentos:', argumentos)
 
     # Conferimos o formato de saída
-    if '.png' not in caminho_saida:
+    if not caminho_saida.endswith('.png'):
         # Adicionamos ".png"
         caminho_saida = caminho_saida + ".png"
         # Avisamos usuário
         print('O formato de saída parece não ser PNG. Adicionando extensão '
         '".png" no formato:', caminho_saida)
+
 
     ## Transformamos o texto de entrada a depender dos argumentos de passphrase
 
@@ -105,10 +107,11 @@ if __name__ == '__main__':
         # Importamos nossas funções para codificação e decodificação AES
         import aes
         # Passamos o texto por AES (retorna bytes)
+        texto_entrada = texto_entrada.encode('utf-8')
         texto_entrada = aes.aes_encrypt(texto_entrada, passphrase)
     else:
         # convertemos texto para vetor de bytes simplesmente
-        texto_entrada = str.encode(texto_entrada)
+        texto_entrada = str.encode(texto_entrada, 'utf-8')
     # Calculamos seu tamanho
     tamanho_mensagem = len(texto_entrada)
 
@@ -119,6 +122,7 @@ if __name__ == '__main__':
     # Adicionamos a mensagem
     mensagem_bytes.extend(texto_entrada)
     tamanho_bytes = len(mensagem_bytes)
+
 
     ## Incluímos a mensagem na imagem
 
@@ -152,21 +156,19 @@ if __name__ == '__main__':
             # Pegamos a mensagem byte a byte
             indice = 0
             byte = mensagem_bytes[indice]
-            bits = 8
+            bits = 7
             for msg in it_mensagem:
                 # Preenchemos a mensagem com o bit correspondente
-                msg[...] = (byte & 1)
+                msg[...] = (byte & (1 << bits)) >> bits
                 # Preenchemos a máscara com 1
                 msc = next(it_mascara)
                 msc[...] = 1
-                # Fazemos o shift do byte para trazer o mais significativo
-                byte = byte >> 1
                 # Indicamos que já lemos um bit do byte
                 bits -= 1
                 # Se acabamos os bits desse byte, pegamos outro
-                if bits == 0:
+                if bits < 0:
                     # Restauramos o contador de bits remanescentes
-                    bits = 8
+                    bits = 7
                     # Adicionamos um ao índice do byte que estamos
                     indice += 1
                     # Verificamos se acabamos a mensagem
@@ -185,8 +187,8 @@ if __name__ == '__main__':
     # matriz binária. Basta colocarmos na imagem no plano correspondente.
 
     # Corrigimos a máscara para o plano de bit que desejamos
-    mensagem = np.left_shift(mensagem, int(plano_bits))
-    mascara = np.left_shift(mascara, int(plano_bits))
+    mensagem = np.left_shift(mensagem, plano_bits)
+    mascara = np.left_shift(mascara, plano_bits)
     # Invertemos a máscara para retirar os bits da imagem principal utilizando
     # um NOT
     mascara_not = np.invert(mascara)

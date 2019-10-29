@@ -5,17 +5,11 @@
 # Modificado de https://www.quickprogrammingtips.com/python/aes-256-encryption-and-decryption-in-python.html
 
 from Crypto.Cipher import AES # algoritmo AES
-from Crypto import Random # iniciar o initializing vector usado em AES
 from Crypto.Protocol.KDF import PBKDF2 # para hashing seguro de senhas
+from Crypto.Util.Padding import pad, unpad # para padding dos blocos de 16 bytes
 
 BLOCK_SIZE = 16
 SALT = b"LFstPpN1fTIEbTcIuNja1hLzZEE="
-
-def _pad(string):
-    return string + (BLOCK_SIZE - len(string) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(string) % BLOCK_SIZE)
-
-def _unpad(string):
-    return string[:-ord(string[len(string) - 1:])]
 
 def _get_pbkdf2_key(password):
     # Pegamos a chave de PBKDF2 (apenas 32 bytes)
@@ -24,12 +18,10 @@ def _get_pbkdf2_key(password):
 def aes_encrypt(data, password):
     # Pegamos uma chave de 32 bytes
     private_key = _get_pbkdf2_key(password)
-    # Pegamos um IV aleatório
-    iv = Random.new().read(AES.block_size)
     # Fazemos o cipher
-    cipher = AES.new(private_key, AES.MODE_CBC, iv)
-    # Colocamos o IV no início
-    return iv + cipher.encrypt(_pad(data))
+    cipher = AES.new(private_key, AES.MODE_CBC)
+    # Retornamos o vetor inicial com a mensagem cifrada
+    return cipher.iv + cipher.encrypt(pad(data, AES.block_size))
 
 def aes_decrypt(data, password):
     # Pegamos uma chave de 32 bytes
@@ -39,5 +31,6 @@ def aes_decrypt(data, password):
     # Fazemos o cipher
     cipher = AES.new(private_key, AES.MODE_CBC, iv)
     # Deciframos
-    return _unpad(cipher.decrypt(data[16:]))
+    return unpad(cipher.decrypt(data[16:]), AES.block_size)
+
 
