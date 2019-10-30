@@ -129,7 +129,7 @@
 
     \subsection{Teste de funcionalidade}
 
-        Para o teste de funcionalidade, codificamos na imagem \texttt{imgs/mel.jpg} a mensagem no arquivo de texto \texttt{input/mensagem.txt} no plano de \textit{bits} 0, produzindo a imagem \texttt{output/mel_coded.png}. Fazemos a decodificação da imagem \texttt{output/mel_coded.png} no plano de \textit{bits} 0 produzindo a mensagem \texttt{output/mensagem_codificada.txt} e notamos que não há qualquer diferença entre as duas.
+        Para o teste de funcionalidade, codificamos na imagem \texttt{imgs/mel.jpg} a mensagem no arquivo de texto \texttt{input/mensagem.txt} no plano de \textit{bits} 0, produzindo a imagem \texttt{output/mel_coded.png}. Fazemos a decodificação da imagem \texttt{output/mel_coded.png} no plano de \textit{bits} 0 produzindo a mensagem \texttt{output/mensagem_codificada.txt} e notamos que não há qualquer diferença visual entre as duas.
 
         Utilizamos o parâmetro \texttt{---passphrase}, temos o mesmo resultado. Porém, caso a senha seja incorreta na decodificação, haverá um erro em alguma etapa do algoritmo \texttt{AES}, de conversão para \textit{string} ou, com sorte, o texto ficará ilegível.
 
@@ -149,11 +149,63 @@
                 \label{fig:mel-coded}
             \end{subfigure}
 
-            \caption{Comparativo entre a imagem original e a com mensagem codificada}
+            \caption{Comparativo entre a imagem original e a com mensagem codificada.}
             \label{fig:mel-comparativo}
         \end{figure}
 
+    \subsection{Análise de espaço}
+    \label{sec:espaco-utilizado}
 
+        A mensagem utiliza espaço que antes era destinado à informações da imagem, inevitavelmente produzindo artefatos e degradando a imagem, por mais que pequenas. A capacidade de armazenar dados dentro de uma imagem comum atual é bastante grande visto que os \textit{bits} menos significativos produzem pouca interferência visual e a dimensão é grande mesmo em celulares mais modestos.
+
+        Em uma imagem tradicional que utilizamos no dia a dia, teremos geralmente 3 camadas de cores com profundidade de 8 \textit{bits}. Como utilizamos apenas um plano, apenas 1 desses 8 \textit{bits} poderão ser utilizados. Considerando a imagem com largura $w$ e altura $h$, teremos $ 3 \cdot w \cdot h / 8 $ \textit{bits} para escrever a mensagem.
+
+        No entanto, podemos utilizar planos independentes entre si. Ou seja, se quisermos, podemos utilizar todos os 8 planos disponíveis, efetivamente destruindo a imagem original, utilizando todos os pontos somente para a mensagem. Exemplifico isso na \cref{fig:mel-coded-todos}, onde todos os planos foram ocupados com a mesma mensagem (que ocupa apenas um trecho da imagem). Apesar de visualmente terrível, devido a compressão do formato \texttt{PNG}, economizamos espaço comparado ao arquivo de texto padrão do sistema.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.4\textwidth,keepaspectratio]{mel_coded_all}
+            \caption{Imagem codificada em todos os planos.}
+            \label{fig:mel-coded-todos}
+        \end{figure}
+
+    \subsection{Análise dos planos de \textit{bits}}
     \label{sec:efeito-plano-bits}
+
+        Podemos verificar na \cref{fig:comparativo-planos} o efeito visual negativo causado pela mensagem em planos de \textit{bits} mais significativos da imagem, alterando cada vez mais significativamente as cores de fato.
+
+        Confirmamos ainda o trecho da imagem que é utilizado para a mensagem, comentado na \cref{sec:espaco-utilizado}, já que o programa nos informou que utilizamos cerca de $20\%$ da capacidade total do plano da imagem e visualmente parece correto: cerca de um quinto da imagem é visualmente afetada na \cref{fig:comparativo-plano-7}.
+
+        \begin{figure*}
+            \centering
+            \begin{subfigure}{0.18\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded}
+                \caption{No plano $0$}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.18\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded_1}
+                \caption{No plano $1$}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.18\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded_2}
+                \caption{No plano $2$}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.18\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded_4}
+                \caption{No plano $4$}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.18\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded_7}
+                \caption{No plano $7$}
+                \label{fig:comparativo-plano-7}
+            \end{subfigure}
+
+            \caption{Comparativo entre planos de \textit{bits} utilizados para codificar a mensagem.}
+            \label{fig:comparativo-planos}
+        \end{figure*}
 
 \end{document}
