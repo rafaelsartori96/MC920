@@ -22,7 +22,7 @@
 \usepackage{cleveref} % para referenciar tabelas e figuras melhor
 \usepackage{indentfirst} % indentação de todo primeiro parágrafo
 \usepackage{graphicx} % para adicionar imagens
-\graphicspath{{../imgs/}} % atalho para o caminho das imagens
+\graphicspath{{../imgs/},{../output/}} % atalho para o caminho das imagens
 \usepackage{float} % para fixar posição de imagens
 \usepackage{subcaption} % para imagens ficarem lado a lado
 % Usamos geometry pois dá mais espaço que fullpage
@@ -64,14 +64,95 @@
         Para isso, o programa sempre exigirá o formato \texttt{PNG} para a saída, adicionando a extensão ``\texttt{.png}'' caso não esteja mencionado na entrada.
 
     \subsection{Preparação da mensagem}
+    \label{sec:preparacao-mensagem}
 
-        O programa será capaz de encriptar a mensagem de forma segura utilizando uma senha e o algoritmo \texttt{AES}, produzindo um vetor de \textit{bytes}. Caso a senha não seja fornecida, a mensagem é interpretada apenas pelos \textit{bytes} que compõem a \textit{string}.
+        O programa é capaz de encriptar a mensagem de forma segura utilizando uma senha e o algoritmo \texttt{AES}, produzindo um vetor de \textit{bytes}. Caso a senha não seja fornecida, a mensagem é interpretada apenas pelos \textit{bytes} que compõem a \textit{string}.
 
         Esses \textit{bytes} serão divididos em uma matriz de mesmo tamanho da imagem, contendo apenas um \textit{bit} por posição correspondendo a imagem. Ou seja, dividiremos cada \textit{byte} em 8 \textit{bits} na matriz que possui dimensão igual à da imagem.
 
         A matriz precisa ser menor ou no máximo de mesmo tamanho à imagem e cada valor precisa ocupar no máximo um \textit{bit}. Caso isso não for verdade, não conseguiremos incluir toda mensagem na imagem sem maiores perdas, pois nos comprometemos pelo enunciado a utilizar apenas um plano de \textit{bits} da imagem. O efeito de qual plano de \textit{bits} devemos escolher para diminuir artefatos visuais será discutido na \cref{sec:efeito-plano-bits} com os resultados.
 
         Um problema que haverá com esta metodologia é que, como os \textit{bytes} retornados pelo \texttt{AES} não representam um texto em \texttt{ASCII}, não podemos confiar que haverá um caractere terminal \texttt{\textbackslash0}. Devemos, portanto, incluir alguma forma de saber onde a mensagem secreta acaba. Fazemos isso através de um inteiro a ser colocado no preâmbulo: o número de \textit{bytes} da mensagem a ser escrita na imagem.
+
+    \subsection{Colocando a mensagem na imagem}
+
+        Essa etapa é feita através de operações binárias e vetoriais em toda imagem, o que é bastante eficiente e rápido. Começando com a imagem inicial, precisamos remover o trecho da imagem que utilizaremos para a mensagem.
+
+        Fazemos uma máscara $M_m$ que seleciona todas as posições que a mensagem utilizará, pois assim não eliminamos todo o plano de \textit{bits}, apenas as posições que precisamos. Isso dificultará a identificação de uma mensagem dentro da imagem, pois manteremos todo o plano ocupado com informações, e manterá parte da imagem intacta, sobretudo em pequenas mensagens.
+
+        Com a imagem $I$, plano de \textit{bits} $p$ e a máscara $M_m$, zeramos apenas as posições que utilizaremos para a mensagem através da \cref{eq:imagem-sem-plano}, produzindo a imagem ``com vazios'' $I_v$.
+
+        \begin{equation}
+        \label{eq:imagem-sem-plano}
+            I_v = \texttt{($I$ \&  ($\lnot$($M_m$ << $p$)))}
+        \end{equation}
+
+
+        Juntamos a imagem com espaço para mensagem $I_v$ com a matriz da mensagem $M$ feita na \cref{sec:preparacao-mensagem} através da \cref{eq:imagem-com-mensagem}, resultando na imagem final $I_f$, que agora contém a mensagem no plano de \textit{bits} $p$ especificado.
+
+        \begin{equation}
+        \label{eq:imagem-com-mensagem}
+            I_f = \texttt{($I_v$ | ($M$ << $p$))}
+        \end{equation}
+
+    \subsection{Salvando a imagem final}
+
+        Utilizando \emph{OpenCV}, salvamos a imagem final $I_f$ em formato \texttt{PNG}, que é um formato \textit{lossless}, protegendo a mensagem de degradações.
+
+        Assim, acabamos todas as etapas do codificador. Agora veremos a metodologia para o decodificador, que fará praticamente o trabalho oposto: com a imagem final $I_f$, determinamos a máscara da mensagem $M_m$ e retiramos, utilizando operações binárias novamente, a mensagem $M$. É importante ressaltar que o plano de \textit{bits} $p$ é dado como argumento do programa e não precisa ser determinado pelo decodificador.
+
+    \subsection{Isolando a mensagem}
+
+        Fazemos os mesmos passos para abrir a imagem utilizando \emph{OpenCV}, abrindo a entrada que deve ser dessa vez no formato \texttt{PNG}. Os 4 primeiros \textit{bytes} (divididos entre \textit{bits}, como descrito anteriormente) do plano de \textit{bits} selecionado da mensagem deve conter o tamanho da mensagem a seguir.
+
+        Com o tamanho da mensagem, conseguimos reconstruir a máscara $M_m$ (multiplicamos esse tamanho por 8 -- pois há 8 \textit{bits} dentro de um \textit{byte} -- e decrescemos de 1 em 1 a cada vez que adicionamos, da esquerda para direita, de cima para baixo, um \textit{bit} à máscara vazia exceto pelos 4 primeiros \textit{bytes}).
+
+        Com a máscara pronta, conseguimos isolar a mensagem $M$ através da \cref{eq:isolando-mensagem}.
+
+        \begin{equation}
+        \label{eq:isolando-mensagem}
+            M = \texttt{($I_f$ \& ($M_m$ << $p$)) >> $p$}
+        \end{equation}
+
+        Agora basta isolar \textit{bit} a \textit{bit} a mensagem, formando os \textit{bytes}.
+
+    \subsection{Decodificando a mensagem}
+
+        Com o vetor de \textit{bytes} pronto, se houve a entrada de senha, passamos a mensagem pelo algoritmo de decodificação \texttt{AES}. Com ou sem senha, interpretamos o vetor binário final como uma \textit{string}, obtendo um texto.
+
+        Após exportação do texto para um arquivo, realizamos todas as etapas e a funcionalidade do programa está completa.
+
+
+\section{Resultados e análise}
+
+    Agora iremos testar a funcionalidade e analisar o efeito da mensagem na imagem em diversos planos de \textit{bits}.
+
+    \subsection{Teste de funcionalidade}
+
+        Para o teste de funcionalidade, codificamos na imagem \texttt{imgs/mel.jpg} a mensagem no arquivo de texto \texttt{input/mensagem.txt} no plano de \textit{bits} 0, produzindo a imagem \texttt{output/mel_coded.png}. Fazemos a decodificação da imagem \texttt{output/mel_coded.png} no plano de \textit{bits} 0 produzindo a mensagem \texttt{output/mensagem_codificada.txt} e notamos que não há qualquer diferença entre as duas.
+
+        Utilizamos o parâmetro \texttt{---passphrase}, temos o mesmo resultado. Porém, caso a senha seja incorreta na decodificação, haverá um erro em alguma etapa do algoritmo \texttt{AES}, de conversão para \textit{string} ou, com sorte, o texto ficará ilegível.
+
+        Podemos tentar perceber as diferenças entre a imagem que possui a mensagem e a original na \cref{fig:mel-comparativo}.
+
+        \begin{figure}[h]
+            \centering
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel}
+                \caption{Imagem original}
+                \label{fig:mel-original}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel_coded}
+                \caption{Imagem codificada}
+                \label{fig:mel-coded}
+            \end{subfigure}
+
+            \caption{Comparativo entre a imagem original e a com mensagem codificada}
+            \label{fig:mel-comparativo}
+        \end{figure}
+
 
     \label{sec:efeito-plano-bits}
 
