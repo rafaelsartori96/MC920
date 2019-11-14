@@ -16,6 +16,12 @@ if __name__ == '__main__':
         'imagem_entrada',
         help="Caminho da imagem de entrada para comprimirmos."
     )
+    # Parâmetro k
+    parser.add_argument(
+        'k',
+        type=int,
+        help="Parâmetro k para produzir a imagem comprimida."
+    )
     # Adicionamos um argumento para determinar qual imagem produziremos
     parser.add_argument(
         'imagem_saida',
@@ -34,6 +40,8 @@ if __name__ == '__main__':
     # caminho dos arquivos de imagem
     caminho_entrada = argumentos['imagem_entrada']
     caminho_saida = argumentos['imagem_saida']
+    # parâmetro k
+    k = int(argumentos['k'])
     # se imprimiremos outputs
     verbose = argumentos['verbose']
 
@@ -55,8 +63,42 @@ if __name__ == '__main__':
         # Avisamos usuário
         print('O formato de saída foi alterado para PNG:', caminho_saida)
 
-    # Abrimos a imagem utilizando float
+    # Abrimos a imagem utilizando int
     img_in = cv2.imread(caminho_entrada, cv2.IMREAD_UNCHANGED)
     img_in = img_in.astype(np.float64)
+    # Criamos a imagem para saída
     img_out = np.zeros(img_in.shape, dtype=np.float64)
+
+    # Para toda camada da imagem, comprimimos
+    for i in range(0, img_in.shape[2]):
+        # Isolamos a camada atual
+        camada = img_in[:,:,i]
+
+        # Aplicamos decomposição em valores singulares (SVD em inglês)
+        verbose('Calculando SVD da camada', i)
+        U, S, VH = np.linalg.svd(camada, full_matrices=False)
+        verbose('SVD calculado.')
+
+        # Seccionamos em k
+        Ug = U[:,:k]
+        Sg = S[:k]
+        Vg = VH[:k,:]
+
+        # Fazemos a imagem final
+        verbose('Calculando camada', i, 'final')
+        img_out[:,:,i] = (Ug * Sg) @ Vg
+        verbose('Camada final pronta')
+
+        # Imprimimos informações da imagem
+        verbose('Formato das matrizes:')
+        verbose('camada original', camada.shape)
+        verbose('U', U.shape)
+        verbose('S', S.shape)
+        verbose('VH', VH.shape)
+        verbose('camada final', img_out[:,:,i].shape)
+        verbose()
+
+    # Salvamos a imagem final
+    cv2.imwrite(caminho_saida, img_out, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+
 
