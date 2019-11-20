@@ -40,6 +40,13 @@ if __name__ == '__main__':
         action='store_true',
         help='Se mencionado, utilizará o método SVD de Numpy.'
     )
+    # argumento opcional para
+    parser.add_argument(
+        '-r','--substituir-original',
+        action='store_true',
+        help='Se mencionado, substituirá a imagem original utilizando mesmo'
+        'método do OpenCV.'
+    )
 
     # Pegamos os argumentos da entrada
     argumentos = vars(parser.parse_args())
@@ -123,6 +130,8 @@ if __name__ == '__main__':
         # Fazemos autovalores e autovetores da matriz de covariância
         verbose('Calculando autovalores e autovetores da matriz de covariância')
         autovalores, autovetores = np.linalg.eig(covariancia)
+        if np.iscomplex(autovetores).any():
+            print('Imagem', caminho_entrada, 'possui autovetores complexos.')
         # Ordenamos decrescentemente autovalores e autovetores
         sort_indices = np.argsort(autovalores)[::-1]
         autovalores = autovalores[sort_indices]
@@ -147,7 +156,8 @@ if __name__ == '__main__':
     # Salvamos a imagem final
     verbose('Escrevendo a imagem final', caminho_saida)
     cv2.imwrite(caminho_saida, img_out)
-    verbose('Escrevendo a imagem original (usando mesma compressão PNG)')
-    cv2.imwrite(caminho_entrada, img_in)
+    if argumentos['substituir_original']:
+        verbose('Escrevendo a imagem original (usando mesma compressão PNG)')
+        cv2.imwrite(caminho_entrada, img_in)
 
 
