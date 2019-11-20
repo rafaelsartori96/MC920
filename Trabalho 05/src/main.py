@@ -71,34 +71,51 @@ if __name__ == '__main__':
 
     # Para toda camada da imagem, comprimimos
     for i in range(0, img_in.shape[2]):
-        # Isolamos a camada atual
+        # Isolamos a camada atual:
+        # camada de dados, cada linha é um vetor de atributos
+        verbose('Isolando camada', i)
         camada = img_in[:,:,i]
 
-        # Aplicamos decomposição em valores singulares (SVD em inglês)
-        verbose('Calculando SVD da camada', i)
-        U, S, VH = np.linalg.svd(camada, full_matrices=False)
-        verbose('SVD calculado.')
+        # Calculamos a média de cada coluna
+        verbose('Preparando média das colunas')
+        media_colunas = camada.mean(axis=0)
 
-        # Seccionamos em k
-        Ug = U[:,:k]
-        Sg = S[:k]
-        Vg = VH[:k,:]
+        # Removemos a média de cada linha da camada
+        verbose('"Normalizando" em relação às médias')
+        camada_norm = camada - media_colunas
 
-        # Fazemos a imagem final
-        verbose('Calculando camada', i, 'final')
-        img_out[:,:,i] = (Ug * Sg) @ Vg
-        verbose('Camada final pronta')
+        # Fazemos a matriz de covariância
+        verbose('Fazendo a matriz de covariância')
+        covariancia = np.cov(camada_norm)
 
-        # Imprimimos informações da imagem
-        verbose('Formato das matrizes:')
-        verbose('camada original', camada.shape)
-        verbose('U', U.shape)
-        verbose('S', S.shape)
-        verbose('VH', VH.shape)
-        verbose('camada final', img_out[:,:,i].shape)
-        verbose()
+        # Fazemos autovalores e autovetores da matriz de covariância
+        verbose('Calculando autovalores e autovetores da matriz de covariância')
+        autovalores, autovetores = np.linalg.eig(covariancia)
+        # Ordenamos decrescentemente autovalores e autovetores
+        sort_indices = np.argsort(autovalores)[::-1]
+        autovalores = autovalores[sort_indices]
+        autovetores = autovetores[:,sort_indices]
+        verbose('\tcamada.shape (nxd)', camada.shape)
+        verbose('\tautovalores.shape (n)', autovalores.shape)
+        verbose('\tautovetores.shape (nxn)', autovetores.shape)
+
+        # Pegando os k primeiros valores da matriz de autovetores
+        verbose('Isolando autovetores com k =', k)
+        autovetores = autovetores[:,:k]
+        verbose('\tautovetores.shape (nxd)', autovetores.shape)
+        verbose('\tautovetores.transpose().shape (dxn)', autovetores.transpose().shape)
+
+        # Calculamos a matriz X chapeu de saída
+        verbose('Fazendo matriz de saída')
+        camada_ = np.dot(autovetores.transpose(), camada_norm)
+        verbose('\tx_chapeu.shape (nxk)', camada_.shape)
+        img_out[:,:,i] = np.dot(autovetores, camada_) + media_colunas
+        verbose('\timg_out[i].shape (nxd)', img_out[:,:,i].shape)
 
     # Salvamos a imagem final
-    cv2.imwrite(caminho_saida, img_out, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+    verbose('Escrevendo a imagem final', caminho_saida)
+    cv2.imwrite(caminho_saida, img_out)
+    verbose('Escrevendo a imagem original (usando mesma compressão PNG)')
+    cv2.imwrite(caminho_entrada, img_in)
 
 
