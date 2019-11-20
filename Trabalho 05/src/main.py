@@ -34,6 +34,12 @@ if __name__ == '__main__':
         help='Se mencionado, informará o usuário do que o programa está'
         ' fazendo.'
     )
+    # argumento opcional para utilizar o método SVD do numpy
+    parser.add_argument(
+        '-np-svd','--numpy-svd',
+        action='store_true',
+        help='Se mencionado, utilizará o método SVD de Numpy.'
+    )
 
     # Pegamos os argumentos da entrada
     argumentos = vars(parser.parse_args())
@@ -69,12 +75,33 @@ if __name__ == '__main__':
     # Criamos a imagem para saída
     img_out = np.zeros(img_in.shape, dtype=np.float64)
 
-    # Para toda camada da imagem, comprimimos
+    # Links que utilizei para escrever algumas coisas (algumas delas já desfiz)
+    # https://www2.imm.dtu.dk/pubdb/views/edoc_download.php/4000/pdf/imm4000
+    # https://math.stackexchange.com/questions/733612/using-svd-in-pca-for-image-compression
+    # http://danielnee.com/2015/04/computing-pca-with-svd/
+    # https://towardsdatascience.com/pca-and-svd-explained-with-numpy-5d13b0d2a4d8
+    # https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/
+    # https://stackoverflow.com/questions/24913232/using-numpy-np-linalg-svd-for-singular-value-decomposition
+    # web.mit.edu/be.400/www/SVD/Singular_Value_Decomposition.htm
+    # http://www.scielo.br/pdf/eins/v10n2/pt_a04v10n2.pdf
+    # https://arxiv.org/pdf/1404.1100.pdf
+    # além dos slides de aula
+
+    # Para toda camada da imagem, comprimimos utilizando PCA com dado k
     for i in range(0, img_in.shape[2]):
         # Isolamos a camada atual:
         # camada de dados, cada linha é um vetor de atributos
         verbose('Isolando camada', i)
         camada = img_in[:,:,i]
+
+        # Conferimos o método que utilizaremos
+        if argumentos['numpy_svd']:
+            # Solução automática (utilizando SVD do Numpy)
+            verbose('Produzindo matrizes de SVD')
+            U, D, Vt = np.linalg.svd(camada)
+            verbose('Refazendo a imagem com os k componentes')
+            img_out[:,:, i] = U[:, :k] @ np.diag(D[:k]) @ Vt[:k, :]
+            continue
 
         # Calculamos a média de cada coluna
         verbose('Preparando média das colunas')
@@ -86,7 +113,12 @@ if __name__ == '__main__':
 
         # Fazemos a matriz de covariância
         verbose('Fazendo a matriz de covariância')
-        covariancia = np.cov(camada_norm)
+        # usando função de numpy
+        #covariancia = np.cov(camada_norm)
+        # usando (X * X^{T})
+        covariancia = np.dot(camada_norm, camada_norm.transpose())
+        #covariancia = covariancia / camada.shape[0] # vi em algum site, mas
+        # não faz diferença aparente e não está no slide
 
         # Fazemos autovalores e autovetores da matriz de covariância
         verbose('Calculando autovalores e autovetores da matriz de covariância')
