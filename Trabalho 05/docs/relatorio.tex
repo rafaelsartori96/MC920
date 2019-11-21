@@ -44,7 +44,7 @@
 
     O objetivo do trabalho é avaliar o procedimento PCA (\textit{Principal Component Analysis}) como efetivo método de compressão de imagens através da redução de componentes menos significativos.
 
-    Faremos isso através de um programa Python que utiliza as bibliotecas \href{https://opencv.org/}{\emph{OpenCV}}, \href{https://numpy.org/}{\emph{NumPy}} e padrão.
+    Faremos isso através de um programa Python que utiliza as bibliotecas \href{https://opencv.org/}{\emph{OpenCV}}, \href{https://numpy.org/}{\emph{NumPy}} e padrão. Utilizamos também o \href{https://www.gimp.org/}{\emph{GIMP}} como \textit{software} para manipular algumas imagens antes da execução do programa.
 
 
 \section{Metodologia}
@@ -124,50 +124,185 @@
 
     \subsection{Avaliando resultados}
 
-        Agora, com as duas formas de se produzir uma imagem utilizando menos componentes, podemos avaliar a compressão. Para isso, salvamos cada imagem utilizando \emph{OpenCV}, calculamos a taxa de compressão e RMSE (\textit{Root mean square error}). Esses dados são impressos em um arquivo e podem ser comparados apenas dentro de uma mesma imagem (devida natureza de RMSE).
+        Agora, com as duas formas de se produzir uma imagem utilizando menos componentes, podemos avaliar a compressão. Para isso, salvamos cada imagem utilizando \emph{OpenCV}, calculamos a taxa de compressão e RMSE (\textit{Root mean square error}). Esses dados são impressos em um arquivo e podem ser comparados apenas dentro de uma mesma imagem (devida natureza de RMSE, dependendo muito da grandeza dos dados).
 
         Os testes foram automatizados através de um \textit{script} \texttt{bash}. Fazemos para cada imagem alguns valores de $k$: 32, 64, 128, 192 e 256, produzindo uma imagem de saída e um relatório diferente.
 
 
 \section{Resultados}
 
-    % falar de modo gerão da compressão e resultados
+    Os resultados obtidos serão analisados quanto a semelhança a original e quanto aos resultados numéricos no relatório (taxa de compressão, RMSE).
+    Em todas as imagens, o resultado utilizando o SVD de \emph{NumPy} foi praticamente igual à nossa implementação, desviando muito pouco tanto em espaço ocupado, quanto RMSE.
 
-    % apresentar imagens versão -menor
+    \subsection{Imagem \texttt{baboon}}
 
-    Como explicitado em aula, podemos comprovar a dificuldade para escolher um valor $k$. Há imagens em que visualmente não podemos notar artefatos com $k$ pequeno e outras que fazem muita diferença, mesmo em dimensões parecidas. Podemos perceber isso na comparação das imagens \texttt{monalisa} e \texttt{watch-menor} na \cref{fig:comparativo-watch-monalisa}, cujas dimensões são parecidas e número de \textit{pixels} diferem em cerca de apenas 2 mil.
+        Começando com a imagem \texttt{baboon}, para todo $k$ testado, a taxa de compressão foi menor que 1, ou seja, de fato a redução de componentes auxiliou a diminuição do tamanho do arquivo para esta imagem.
 
-    \begin{figure}[H]
-        \centering
-        \begin{subfigure}{0.23\textwidth}
-            \includegraphics[width=\textwidth,keepaspectratio]{monalisa}
-            \caption{\texttt{monalisa} original}
-            \label{fig:monalisa-original}
-        \end{subfigure}
-        \begin{subfigure}{0.23\textwidth}
-            \includegraphics[width=\textwidth,keepaspectratio]{monalisa-64}
-            \caption{\texttt{monalisa} $k=64$}
-            \label{fig:monalisa-64}
-        \end{subfigure}
+        Não há diferenças visuais notáveis para $k \geq 192$, mas conseguimos notar em $k = 128$ uma suavização (por exemplo, o brilho no nariz na \cref{fig:baboon-128}) e, para valores menores, uma perda de qualidade notável. No melhor caso ($k = 192$), a taxa de compressão foi $0.981$ com RMSE $7.2306$, o que representa uma diminuição de $30 kB$ -- considerável em um banco grande de imagens, desprezível para um usuário comum.
 
-        \begin{subfigure}{0.23\textwidth}
-            \includegraphics[width=\textwidth,keepaspectratio]{watch-menor}
-            \caption{\texttt{watch-menor} original}
-            \label{fig:watch-menor-original}
-        \end{subfigure}
-        \begin{subfigure}{0.23\textwidth}
-            \includegraphics[width=\textwidth,keepaspectratio]{watch-menor-64}
-            \caption{\texttt{watch-menor} $k=64$}
-            \label{fig:watch-menor-64}
-        \end{subfigure}
+        \begin{figure}[h]
+            \centering
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-128}
+                \caption{$k=128$}
+                \label{fig:baboon-128}
+            \end{subfigure}
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon}
+                \caption{Original}
+                \label{fig:baboon-original}
+            \end{subfigure}
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{baboon-192}
+                \caption{$k=192$}
+                \label{fig:baboon-192}
+            \end{subfigure}
 
-        \caption{Comparativo entre duas imagens de dimensões próximas}
-        \label{fig:comparativo-watch-monalisa}
-    \end{figure}
+            \caption{Comparativo entre $k=192$ e $k=128$ para \texttt{baboon}}
+            \label{fig:baboon-comparativo}
+        \end{figure}
+
+    \subsection{Imagem \texttt{monalisa}}
+
+        Com dimensões muito menores, para os mesmos valores de $k$, a imagem é bastante favorecida, já que o número de \textit{pixels} por componente é menor, o que intuitivamente implicaria numa representação melhor ou mais eficiente.
+
+        No entanto, para $k \geq 128$, a taxa de compressão foi sempre maior ou igual 1 (igual em $k = 256$, que é a dimensão da imagem), o que é ineficiente. Para $k = 32$, há o efeito de suavização já mencionado e, para $k = 64$, não podemos notar artefatos, conseguindo taxa de compressão $0.965$ e RMSE $3.7023$, diminuindo apenas $5 kB$. É possível comparar com a imagem original nas \cref{fig:monalisa-64,fig:monalisa-original}.
+
+    \subsection{Imagem \texttt{peppers}}
+
+        A imagem possui dimensões iguais às do \texttt{baboon}, com resultados diferentes: não conseguimos notar diferenças visuais na imagem a partir de $k = 64$, oferecendo taxa de compressão $0.910$ e RMSE $6.8881$, economizando $20kB$. Para todo valor de $k$, temos um fator de compressão menor do que 1.
+
+        Podemos tentar identificar diferenças para \texttt{peppers} na \cref{fig:peppers-comparativo}.
+
+        \begin{figure}[H]
+            \centering
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{peppers-64}
+                \caption{$k=64$}
+                \label{fig:peppers-64}
+            \end{subfigure}
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{peppers}
+                \caption{Original}
+                \label{fig:peppers-original}
+            \end{subfigure}
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{peppers-128}
+                \caption{$k=128$}
+                \label{fig:peppers-128}
+            \end{subfigure}
+
+            \caption{Comparativo entre $k=64$ e $k=128$ para \texttt{peppers}}
+            \label{fig:peppers-comparativo}
+        \end{figure}
+
+    \subsection{Imagem \texttt{watch}}
+
+        As dimensões dessa imagem são as maiores das imagens dadas, também é  produzida por computação gráfica. Para todo $k$, a taxa de compressão é maior que 1. Ou seja, mesmo com a maior quantidade de componentes, a redução de qualidade não auxilia na diminuição do espaço ocupado.
+
+        \begin{figure}[h]
+            \centering
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{watch-128}
+                \caption{$k=128$}
+                \label{fig:watch-128}
+            \end{subfigure}
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{watch}
+                \caption{original}
+                \label{fig:watch-original}
+            \end{subfigure}
+            \begin{subfigure}{0.27\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{watch-256}
+                \caption{$k=256$}
+                \label{fig:watch-256}
+            \end{subfigure}
+
+            \caption{Comparativo entre $k=256$ e $k=128$ para \texttt{watch}}
+            \label{fig:comparativo-watch}
+        \end{figure}
+
+        É possível notar inclusive na imagem de $k=256$ (\cref{fig:watch-256}) componentes um ruído presente nas cores escuras. O melhor resultado foi para $k=32$, com taxa de compressão $1.296$ e RMSE $13.9669$, produzindo uma imagem cerca de $200kB$ mais pesada. No pior caso, a taxa de compressão foi $1.566$ para RMSE $2.8629$.
+
+    \subsection{Imagem \texttt{mel}}
+
+        Única imagem não fornecida pelo professor, capturada utilizando celular comum com grandes dimensões comparado às outras. Podemos notar que a taxa de compressão foi menor que 1 apenas para $k=32$ e $k=64$. Ao contrário de \texttt{watch}, a taxa de compressão foi mais estável, não passando de $1.2$.
+
+        Não é possível notar mais diferenças em relação à original a partir de $k=192$, que possui taxa de compressão $1.114$ e RMSE $3.4381$, utilizando cerca de $200kB$ adicionais, como a \texttt{watch}.
+
+        Podemos comparar os resultados mais próximos do ideal com a original na \cref{fig:mel-comparativo}. É possível notar ruído na parede na \cref{fig:mel-128}, mesmo em tamanho pequeno.
+
+        \begin{figure}[H]
+            \centering
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel-128}
+                \caption{$k=128$}
+                \label{fig:mel-128}
+            \end{subfigure}
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel}
+                \caption{Original}
+                \label{fig:mel-original}
+            \end{subfigure}
+            \begin{subfigure}{0.15\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{mel-192}
+                \caption{$k=192$}
+                \label{fig:mel-192}
+            \end{subfigure}
+
+            \caption{Comparativo entre $k=128$ e $k=192$ para \texttt{mel}}
+            \label{fig:mel-comparativo}
+        \end{figure}
+
+    \subsection{Efeito em dimensões menores}
+
+        Como ambas as imagens de dimensões grandes produziram taxas de compressão não satisfatórias, analisamos também versões menores das mesmas imagens (produzidas com o \emph{GIMP}, usando interpolação cúbica com escala menor, produzindo dimensões parecidas com a menor imagem: \texttt{monalisa}). Adicionamos o sufixo \texttt{-menor} nessas versões: \texttt{mel-menor} e \texttt{watch-menor}.
+
+        Podemos notar uma melhoria na imagem \texttt{watch-menor} em relação a \texttt{watch}. Apesar de ainda possuir apenas taxas maiores ou iguais a 1 em todos os casos, o valor não passa de $1.3$ (antes o valor mais alto era $1.566$). Curiosamente, a pior taxa foi para $k=128$ com $1.275$ e a melhor, para $k=256$ (maior que a dimensão horizontal da imagem), com $1.0$, que possui RMSE de $0.0$, já que a imagem é integralmente reconstruída pelos seus componentes. A partir de $k=192$, não notamos diferenças em relação a original.
+
+        Para a imagem \texttt{mel-menor}, apenas para $k=32$ temos uma taxa de compressão menor que 1, que é $0.998$ (com RMSE $7.5668$). Não conseguimos notar diferenças visuais para $k \geq 128$.
+
+        Ou seja, nessas imagens não obtivemos uma melhora pela redução da dimensão: ainda há espaço extra ocupado em relação a imagem original.
+
+    \subsection{Número de componentes}
+
+        Como explicitado em aula, podemos comprovar a dificuldade para escolher um valor $k$. Há imagens em que visualmente não podemos notar artefatos com $k$ pequeno e outras que fazem muita diferença, mesmo em dimensões parecidas. Podemos perceber isso na comparação das imagens \texttt{monalisa} e \texttt{watch-menor} na \cref{fig:comparativo-watch-menor-monalisa}, cujas dimensões são parecidas e número de \textit{pixels} diferem em cerca de apenas 2 mil, mas notamos na \cref{fig:watch-menor-64} um ruído considerável.
+
+        \begin{figure}[H]
+            \centering
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{monalisa}
+                \caption{\texttt{monalisa} original}
+                \label{fig:monalisa-original}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{monalisa-64}
+                \caption{\texttt{monalisa} $k=64$}
+                \label{fig:monalisa-64}
+            \end{subfigure}
+
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{watch-menor}
+                \caption{\texttt{watch-menor} original}
+                \label{fig:watch-menor-original}
+            \end{subfigure}
+            \begin{subfigure}{0.23\textwidth}
+                \includegraphics[width=\textwidth,keepaspectratio]{watch-menor-64}
+                \caption{\texttt{watch-menor} $k=64$}
+                \label{fig:watch-menor-64}
+            \end{subfigure}
+
+            \caption{Comparativo entre duas imagens de dimensões próximas}
+            \label{fig:comparativo-watch-menor-monalisa}
+        \end{figure}
 
 
 \section{Conclusão}
 
+    Conseguimos conluir que a análise de componentes principais (PCA) possibilita a compressão através da exclusão de componentes menos significativos da imagem.
 
+    No entanto, é válido dizer que nem toda imagem é beneficiada pelo método, produzindo resultados que ocupam mais espaço enquanto reduzem a qualidade visual.
+
+    O método é bastante eficiente para reduzir o espaço ocupado em um banco de muitas imagens de dimensões pequenas, pois a diminuição da qualidade é difícil de ser percebida nesses casos, mostrando-se muito bom para produzir \textit{thumbnails}, \textit{previews} de imagens, já que o algoritmo é bastante rápido nessas condições (em imagens grandes, o algoritmo é muito ineficiente).
 
 \end{document}
