@@ -1,0 +1,4 @@
+Imagem original: imgs_in/mel.png
+Imagem final: imgs_out/mel-32-svd.png
+Taxa de compressão: 0.874
+Root mean square error: 10.7132

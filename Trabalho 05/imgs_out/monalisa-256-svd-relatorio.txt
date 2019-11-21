@@ -1,0 +1,4 @@
+Imagem original: imgs_in/monalisa.png
+Imagem final: imgs_out/monalisa-256-svd.png
+Taxa de compressão: 1.000
+Root mean square error: 0.0000

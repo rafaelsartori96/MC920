@@ -1,0 +1,4 @@
+Imagem original: imgs_in/mel.png
+Imagem final: imgs_out/mel-128.png
+Taxa de compressão: 1.070
+Root mean square error: 4.7735

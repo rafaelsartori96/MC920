@@ -1,0 +1,4 @@
+Imagem original: imgs_in/peppers.png
+Imagem final: imgs_out/peppers-128-svd.png
+Taxa de compressão: 0.959
+Root mean square error: 4.2358

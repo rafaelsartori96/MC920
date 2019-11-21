@@ -1,0 +1,4 @@
+Imagem original: imgs_in/watch.png
+Imagem final: imgs_out/watch-192.png
+Taxa de compressão: 1.582
+Root mean square error: 4.0937

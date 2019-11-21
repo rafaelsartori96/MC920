@@ -27,12 +27,14 @@ for COMPONENTES in 32 64 128 192 256; do
 
         # Com SVD
         IMAGEM_OUT=$CAMINHO_SAIDA$ARQUIVO-$COMPONENTES-svd.png
+        RELATORIO_OUT=$CAMINHO_SAIDA$ARQUIVO-$COMPONENTES-svd-relatorio.txt
 
         echo "Produzindo $IMAGEM_OUT de $IMAGEM_IN..."
         python3 $MAIN_PY \
             $IMAGEM_IN \
             $COMPONENTES \
             $IMAGEM_OUT \
+            -r $RELATORIO_OUT \
             -np-svd &
         if [[ -z "${MC920_PARALELO}" ]]; then
             wait
@@ -40,11 +42,14 @@ for COMPONENTES in 32 64 128 192 256; do
 
         # Sem SVD
         IMAGEM_OUT=$CAMINHO_SAIDA$ARQUIVO-$COMPONENTES.png
+        RELATORIO_OUT=$CAMINHO_SAIDA$ARQUIVO-$COMPONENTES-relatorio.txt
+
         echo "Produzindo $IMAGEM_OUT de $IMAGEM_IN..."
         python3 $MAIN_PY \
             $IMAGEM_IN \
             $COMPONENTES \
-            $IMAGEM_OUT &
+            $IMAGEM_OUT \
+            -r $RELATORIO_OUT &
         if [[ -z "${MC920_PARALELO}" ]]; then
             wait
         fi

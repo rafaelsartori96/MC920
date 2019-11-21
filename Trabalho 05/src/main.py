@@ -2,6 +2,7 @@
 ##
 ## Compressão através de análise de principais componentes (PCA)
 
+import os
 import cv2
 import argparse
 import numpy as np
@@ -27,6 +28,7 @@ if __name__ == '__main__':
         'imagem_saida',
         help="Caminho da imagem produzida comprimida."
     )
+
     # argumento opcional para imprimir o que fazemos
     parser.add_argument(
         '-v','--verbose',
@@ -40,12 +42,18 @@ if __name__ == '__main__':
         action='store_true',
         help='Se mencionado, utilizará o método SVD de Numpy.'
     )
-    # argumento opcional para
+    # argumento opcional para substituir a imagem original
     parser.add_argument(
-        '-r','--substituir-original',
+        '-s','--substituir-original',
         action='store_true',
         help='Se mencionado, substituirá a imagem original utilizando mesmo'
         'método do OpenCV.'
+    )
+    # argumento opcional para escrever relatório de compressão
+    parser.add_argument(
+        '-r','--relatorio',
+        help='Se fornecido, escreverá um relatório sobre a taxa de compressão e'
+        ' erro inserido na imagem em relação à original.'
     )
 
     # Pegamos os argumentos da entrada
@@ -160,4 +168,19 @@ if __name__ == '__main__':
         verbose('Escrevendo a imagem original (usando mesma compressão PNG)')
         cv2.imwrite(caminho_entrada, img_in)
 
+    if argumentos['relatorio'] is not None:
+        # Calculamos a taxa de compressão
+        verbose('Calculando relatório')
+        comp = os.path.getsize(caminho_saida) / os.path.getsize(caminho_entrada)
+        rmse = np.sqrt(np.mean((img_in - img_out)**2))
+
+        # Escrevemos no arquivo
+        with open(argumentos['relatorio'], 'w') as arq_relatorio:
+            verbose('Escrevendo relatório em arquivo')
+            arq_relatorio.writelines([
+                'Imagem original: {}\n'.format(caminho_entrada),
+                'Imagem final: {}\n'.format(caminho_saida),
+                'Taxa de compressão: {:.3f}\n'.format(comp),
+                'Root mean square error: {:.4f}\n'.format(rmse)
+            ])
 

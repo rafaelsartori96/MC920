@@ -1,0 +1,4 @@
+Imagem original: imgs_in/peppers.png
+Imagem final: imgs_out/peppers-192.png
+Taxa de compressão: 0.981
+Root mean square error: 2.8886

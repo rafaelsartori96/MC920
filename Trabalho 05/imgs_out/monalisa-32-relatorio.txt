@@ -1,0 +1,4 @@
+Imagem original: imgs_in/monalisa.png
+Imagem final: imgs_out/monalisa-32.png
+Taxa de compressão: 0.903
+Root mean square error: 5.8819

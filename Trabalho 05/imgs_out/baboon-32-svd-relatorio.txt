@@ -1,0 +1,4 @@
+Imagem original: imgs_in/baboon.png
+Imagem final: imgs_out/baboon-32-svd.png
+Taxa de compressão: 0.816
+Root mean square error: 22.3947
