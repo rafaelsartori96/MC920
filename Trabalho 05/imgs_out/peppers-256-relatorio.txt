@@ -1,4 +1,5 @@
 Imagem original: imgs_in/peppers.png
 Imagem final: imgs_out/peppers-256.png
+k: 256
 Taxa de compressão: 0.993
 Root mean square error: 1.9433

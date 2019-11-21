@@ -1,4 +1,5 @@
 Imagem original: imgs_in/watch.png
 Imagem final: imgs_out/watch-32-svd.png
+k: 32
 Taxa de compressão: 1.288
 Root mean square error: 14.0467

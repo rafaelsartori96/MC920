@@ -1,0 +1,5 @@
+Imagem original: imgs_in/mel-menor.png
+Imagem final: imgs_out/mel-menor-128.png
+k: 128
+Taxa de compressão: 1.033
+Root mean square error: 1.2376

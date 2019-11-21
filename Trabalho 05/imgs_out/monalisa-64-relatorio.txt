@@ -1,4 +1,5 @@
 Imagem original: imgs_in/monalisa.png
 Imagem final: imgs_out/monalisa-64.png
+k: 64
 Taxa de compressão: 0.965
 Root mean square error: 3.7023

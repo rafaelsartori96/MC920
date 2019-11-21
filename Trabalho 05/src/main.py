@@ -113,8 +113,13 @@ if __name__ == '__main__':
         if argumentos['numpy_svd']:
             # Solução automática (utilizando SVD do Numpy)
             verbose('Produzindo matrizes de SVD')
-            U, D, Vt = np.linalg.svd(camada)
+            U, D, Vt = np.linalg.svd(
+                camada,
+                full_matrices=False,
+                compute_uv=True
+            )
             verbose('Refazendo a imagem com os k componentes')
+            # PCA com componentes reduzidos
             img_out[:,:, i] = U[:, :k] @ np.diag(D[:k]) @ Vt[:k, :]
             continue
 
@@ -152,7 +157,10 @@ if __name__ == '__main__':
         verbose('Isolando autovetores com k =', k)
         autovetores = autovetores[:,:k]
         verbose('\tautovetores.shape (nxd)', autovetores.shape)
-        verbose('\tautovetores.transpose().shape (dxn)', autovetores.transpose().shape)
+        verbose(
+            '\tautovetores.transpose().shape (dxn)',
+            autovetores.transpose().shape
+        )
 
         # Calculamos a matriz X chapeu de saída
         verbose('Fazendo matriz de saída')
@@ -180,6 +188,7 @@ if __name__ == '__main__':
             arq_relatorio.writelines([
                 'Imagem original: {}\n'.format(caminho_entrada),
                 'Imagem final: {}\n'.format(caminho_saida),
+                'k: {}\n'.format(k),
                 'Taxa de compressão: {:.3f}\n'.format(comp),
                 'Root mean square error: {:.4f}\n'.format(rmse)
             ])

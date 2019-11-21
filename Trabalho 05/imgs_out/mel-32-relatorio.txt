@@ -1,4 +1,5 @@
 Imagem original: imgs_in/mel.png
 Imagem final: imgs_out/mel-32.png
+k: 32
 Taxa de compressão: 0.878
 Root mean square error: 10.6378

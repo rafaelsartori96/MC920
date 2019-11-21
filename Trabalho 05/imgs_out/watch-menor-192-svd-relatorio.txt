@@ -1,0 +1,5 @@
+Imagem original: imgs_in/watch-menor.png
+Imagem final: imgs_out/watch-menor-192-svd.png
+k: 192
+Taxa de compressão: 1.128
+Root mean square error: 0.5257

@@ -1,4 +1,5 @@
 Imagem original: imgs_in/watch.png
 Imagem final: imgs_out/watch-256.png
+k: 256
 Taxa de compressão: 1.566
 Root mean square error: 2.8629

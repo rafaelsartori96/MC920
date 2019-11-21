@@ -1,4 +1,5 @@
 Imagem original: imgs_in/baboon.png
 Imagem final: imgs_out/baboon-192-svd.png
+k: 192
 Taxa de compressão: 0.981
 Root mean square error: 7.2384
